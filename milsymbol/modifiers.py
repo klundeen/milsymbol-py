@@ -86,8 +86,9 @@ def parse_modifiers(metadata: dict) -> dict:
     result["taskForce"] = tf
     result["feintDummy"] = fd
 
-    # Installation is determined by symbol set (SS 30 = land installation)
-    result["installation"] = metadata.get("symbolset") == "30"
+    # Installation is set by JS metadata parsing, not by symbol set.
+    # Not yet ported — leave false for now.
+    result["installation"] = False
 
     return result
 

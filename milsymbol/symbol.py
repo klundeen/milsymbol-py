@@ -517,6 +517,16 @@ class Symbol:
         di = self._final_di or self._draw_instructions
         bb = self._final_bbox or self._bbox
         if not di or not bb:
+            if self._valid:
+                # Valid SIDC with empty draw instructions (e.g. control measures)
+                # — return a minimal empty SVG like JS does
+                return render_svg(
+                    draw_instructions=[],
+                    bbox=bb or {"x1": 96, "y1": 96, "x2": 104, "y2": 104},
+                    stroke_width=self.stroke_width,
+                    outline_width=self.outline_width,
+                    size=self.size,
+                )
             return _PLACEHOLDER_SVG
         self._svg_cache = render_svg(
             draw_instructions=di,

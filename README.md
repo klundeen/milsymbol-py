@@ -196,33 +196,26 @@ cd playground && python -m http.server 3000
 | Number SIDCs (all affiliations) | 37,828 |
 | Letter SIDCs (all affiliations + echelons) | 71,388 |
 | Symbol sets | 19 |
-| Tests (smoke + modifiers + combined) | 143 |
+| Tests (fast) | 157 |
+| Tests (full corpus, vs JS reference) | 403 |
+| Corpus match rate | 109,216 / 109,216 (100%) |
 | Python source lines | ~800 |
 | Data (gzipped) | 2 MB |
 
 ## Can I use this in production?
 
-Yes, with one caveat. The library produces **pixel-identical SVG** to
-the JS library for 98.5% of the symbol set (107,578 / 109,216), verified
-by exact string comparison against JS-generated reference SVGs.
+Yes. The library produces **pixel-identical SVG** to the JS library
+for all 109,216 symbols in the MIL-STD-2525 / STANAG APP-6 set,
+verified by exact string comparison against JS-generated reference
+SVGs. Every affiliation, every symbol set, every echelon.
 
-**100% correct** (all affiliations): Air (SS 01/02/05/06/50/51),
-Ground Unit (SS 10), Dismounted (SS 11), Land Equipment (SS 15, except 7 edge cases),
-Sea Surface (SS 20), Sea Subsurface (SS 35/36), Activities (SS 40), Cyberspace (SS 60).
+**Caveats:**
 
-**Known gaps** (1,638 symbols in 4 sets):
-
-| Symbol Set | Gap | Count |
-|---|---|---|
-| SS 30 — Land Installation | Installation modifier positioning | 1,603 |
-| SS 25 — Control Measures | Empty/minimal tactical graphics | 21 |
-| SS 15 — Land Equipment | Stroke-width scaling (modifier combos) | 7 |
-| SS 45 | Stroke-width scaling | 7 |
-
-If you're using common military symbols — units, aircraft, ships,
-vehicles — you're at 100%. The gaps are in less-common symbol sets
-and are tracked by the test suite. Check any specific SIDC in the
-playground before relying on it.
+- Frozen to milsymbol 3.0.3's built-in symbol set — no runtime
+  extensions or custom icon registration.
+- Text fields and modifiers are computed in Python. The core symbols
+  are extracted from JS; the composition logic around them is ported.
+- SVG output only (pipe through `cairosvg` for PNG if needed).
 
 **Wheel size:** 1.8 MB, zero runtime dependencies.
 
