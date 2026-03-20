@@ -3,36 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Milsymbol Playground</title>
+<title>milsymbol · playground</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap');
 
   :root {
-    --bg: #0c0e13;
-    --surface: #151820;
-    --surface2: #1c2029;
-    --surface3: #242833;
-    --border: #2a2f3a;
-    --border-focus: #4a7cff;
-    --text: #e0e4ec;
-    --text-dim: #7a8194;
-    --text-bright: #f4f6fa;
-    --accent: #4a7cff;
-    --accent-dim: #2a4a99;
-    --friendly: #80e0ff;
-    --hostile: #ff8080;
-    --neutral: #aaffaa;
-    --unknown: #ffff80;
+    --bg: #1a1d16;
+    --surface: #21251e;
+    --surface2: #292d22;
+    --surface3: #323828;
+    --border: #3a4030;
+    --text: #c8ccb8;
+    --text-dim: #6e7858;
+    --text-bright: #e8ecda;
+    --text-label: #8a9470;
+    --accent: #8ca060;
+    --accent-bright: #a8c070;
+    --accent-glow: rgba(140,160,96,0.15);
+    /* Light parchment render area — black text visible */
+    --render-bg: #eae6d8;
+    --render-border: #cdc8b8;
+    --render-grid: rgba(0,0,0,0.04);
     --js-color: #f0db4f;
-    --py-color: #3776ab;
-    --diff-bad: #ff4040;
-    --diff-good: #40cc40;
-    --radius: 6px;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
+    --py-color: #4b8bbe;
+    --match: #70e870;
+    --diff: #ff5050;
+    --r: 4px;
+    --rl: 6px;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Outfit', sans-serif;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     background: var(--bg);
@@ -40,987 +42,660 @@
     font-family: var(--sans);
     font-size: 14px;
     line-height: 1.5;
-    min-height: 100vh;
+    background-image:
+      linear-gradient(rgba(58,64,48,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(58,64,48,0.15) 1px, transparent 1px),
+      linear-gradient(rgba(58,64,48,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(58,64,48,0.05) 1px, transparent 1px);
+    background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
   }
 
-  /* ── Layout ── */
+  /* === LAYOUT === */
   .app {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: 244px 1fr;
+    grid-template-rows: 42px 1fr;
     height: 100vh;
+    overflow: hidden;
   }
 
+  /* === HEADER === */
   header {
     grid-column: 1 / -1;
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
+    border-bottom: 2px solid var(--border);
+    padding: 0 20px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
   }
 
-  header h1 {
+  .logo {
     font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
     color: var(--text-bright);
-    letter-spacing: -0.02em;
+    letter-spacing: 0.04em;
   }
+  .logo b { color: var(--accent-bright); font-weight: 500; }
 
-  header h1 span { color: var(--accent); }
-
-  header .subtitle {
-    font-size: 12px;
+  .tagline {
+    font-family: var(--mono);
+    font-size: 10px;
     color: var(--text-dim);
     font-weight: 300;
+    border-left: 1px solid var(--border);
+    padding-left: 14px;
   }
 
-  .header-right {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .hdr-right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+
+  .pill {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    padding: 2px 8px; border-radius: 8px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 4px;
   }
+  .pill .d { width: 5px; height: 5px; border-radius: 50%; }
+  .pill-js { background: rgba(240,219,79,0.1); color: var(--js-color); border: 1px solid rgba(240,219,79,0.12); }
+  .pill-js .d { background: var(--js-color); }
+  .pill-py { background: rgba(75,139,190,0.08); color: var(--py-color); border: 1px solid rgba(75,139,190,0.12); opacity: 0.4; }
+  .pill-py .d { background: var(--py-color); }
 
-  .badge {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .badge-js { background: var(--js-color); color: #000; }
-  .badge-py { background: var(--py-color); color: #fff; opacity: 0.4; }
-
-  /* ── Sidebar ── */
+  /* === SIDEBAR === */
   .sidebar {
     background: var(--surface);
-    border-right: 1px solid var(--border);
+    border-right: 2px solid var(--border);
     overflow-y: auto;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
   }
 
-  .sidebar-section {
-    padding: 12px 16px 8px;
-  }
-
-  .sidebar-section h3 {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-  }
-
-  .sidc-input-group {
-    padding: 12px 16px;
+  .sb-group {
+    padding: 10px 12px;
     border-bottom: 1px solid var(--border);
   }
 
-  .sidc-input-group label {
+  .sb-label {
     display: block;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    margin-bottom: 6px;
+    font-family: var(--mono); font-size: 8px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--text-dim); margin-bottom: 5px;
+  }
+
+  .sb-label::before {
+    content: ''; display: inline-block;
+    width: 6px; height: 1px; background: var(--accent);
+    margin-right: 5px; vertical-align: middle;
   }
 
   .sidc-input {
     width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-bright);
-    font-family: var(--mono);
-    font-size: 13px;
-    padding: 8px 10px;
-    outline: none;
-    transition: border-color 0.15s;
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--r);
+    color: var(--accent-bright); font-family: var(--mono); font-size: 12px; font-weight: 500;
+    padding: 7px 9px; outline: none;
+    transition: border-color .15s, box-shadow .15s;
   }
-
-  .sidc-input:focus { border-color: var(--border-focus); }
-
-  .sidc-input.invalid { border-color: var(--diff-bad); }
+  .sidc-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+  .sidc-input.invalid { border-color: var(--diff); color: var(--diff); }
 
   .validity {
-    font-family: var(--mono);
-    font-size: 10px;
-    margin-top: 4px;
-    height: 14px;
+    font-family: var(--mono); font-size: 9px; margin-top: 4px; height: 13px; font-weight: 400;
   }
+  .validity.valid { color: var(--match); }
+  .validity.invalid { color: var(--diff); }
 
-  .validity.valid { color: var(--diff-good); }
-  .validity.invalid { color: var(--diff-bad); }
-
-  /* ── Quick picks ── */
-  .quick-pick {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    cursor: pointer;
-    transition: background 0.1s;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 13px;
+  .opt-row {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
   }
-
-  .quick-pick:hover { background: var(--surface2); }
-
-  .quick-pick .qp-icon {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .opt-row label {
+    font-family: var(--mono); font-size: 10px; color: var(--text-label);
+    width: 72px; flex-shrink: 0; font-weight: 300;
   }
-
-  .quick-pick .qp-icon svg { max-width: 32px; max-height: 32px; }
-
-  .quick-pick .qp-label {
-    font-size: 12px;
-    line-height: 1.3;
+  .opt-row input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r);
+    color: var(--text); font-family: var(--mono); font-size: 10px; padding: 3px 6px; outline: none;
   }
+  .opt-row input:focus { border-color: var(--accent); }
+  .opt-row input::placeholder { color: var(--text-dim); font-weight: 300; }
 
-  .quick-pick .qp-sidc {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--text-dim);
-    display: block;
+  .qp-scroll { flex: 1; overflow-y: auto; }
+
+  .qp {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 12px; cursor: pointer; border: none; background: none;
+    width: 100%; text-align: left; color: var(--text); font-family: var(--sans);
+    transition: background .08s;
   }
+  .qp:hover { background: var(--surface2); }
 
-  /* ── Options panel ── */
-  .option-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-  }
+  .qp-ic { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .qp-ic svg { max-width: 28px; max-height: 28px; }
+  .qp-nm { font-size: 11px; font-weight: 400; }
+  .qp-cd { font-family: var(--mono); font-size: 8px; color: var(--text-dim); display: block; font-weight: 300; }
 
-  .option-row label {
-    font-size: 12px;
-    color: var(--text-dim);
-    width: 90px;
-    flex-shrink: 0;
-  }
-
-  .option-row input, .option-row select {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 4px 6px;
-    outline: none;
-  }
-
-  .option-row input:focus, .option-row select:focus {
-    border-color: var(--border-focus);
-  }
-
-  .option-row select { cursor: pointer; }
-  .option-row select option { background: var(--surface); }
-
-  /* ── Main Content ── */
+  /* === MAIN === */
   .main {
-    overflow-y: auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
   }
 
-  /* ── Comparison panels ── */
-  .comparison {
+  /* -- Affiliation strip -- */
+  .aff-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+  }
+
+  .ac {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 5px 10px 4px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r); cursor: pointer; transition: border-color .12s, transform .08s;
+  }
+  .ac:hover { border-color: var(--text-dim); transform: translateY(-1px); }
+  .ac.on { border-color: var(--accent); background: var(--accent-glow); box-shadow: 0 0 10px var(--accent-glow); }
+  .ac svg { max-width: 36px; max-height: 36px; }
+  .ac span {
+    font-family: var(--mono); font-size: 7px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim);
+  }
+
+  /* -- Content area: comparison on top, tabs below -- */
+  .content {
+    display: grid;
+    grid-template-rows: minmax(220px, 1fr) auto minmax(120px, 200px);
+    overflow: hidden;
+  }
+
+  /* -- Comparison panels -- */
+  .cmp {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    gap: 0;
     overflow: hidden;
   }
 
-  .panel-header {
-    padding: 10px 16px;
+  .pnl {
+    display: flex; flex-direction: column;
     border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--surface2);
   }
+  .pnl:first-child { border-right: 1px solid var(--border); }
 
-  .panel-header h2 {
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-bright);
+  .pnl-hd {
+    padding: 6px 14px;
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
   }
-
-  .panel-header .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+  .pnl-hd h2 {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    color: var(--text-label); letter-spacing: 0.04em;
   }
-
-  .dot-js { background: var(--js-color); }
-  .dot-py { background: var(--py-color); opacity: 0.4; }
-
-  .panel-body {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    min-height: 200px;
+  .pnl-hd .tag {
+    font-family: var(--mono); font-size: 8px; font-weight: 500;
+    padding: 1px 5px; border-radius: 3px; text-transform: uppercase;
   }
+  .t-js { background: rgba(240,219,79,0.12); color: var(--js-color); }
+  .t-py { background: rgba(75,139,190,0.12); color: var(--py-color); }
 
-  .symbol-render {
+  .pnl-body {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    padding: 12px; overflow: auto;
     background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 180px;
-    min-height: 180px;
   }
 
-  .symbol-render svg {
-    max-width: 160px;
-    max-height: 160px;
+  /* -- Render area: parchment colored -- */
+  .sym-render {
+    background: var(--render-bg);
+    border: 1px solid var(--render-border);
+    border-radius: var(--r);
+    padding: 16px;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 140px; min-height: 140px;
+    position: relative;
+    /* Subtle crosshair */
+    background-image:
+      linear-gradient(var(--render-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--render-grid) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center center;
   }
-
-  .symbol-render.large svg {
-    max-width: 300px;
-    max-height: 300px;
+  .sym-render::before, .sym-render::after {
+    content: ''; position: absolute; background: rgba(0,0,0,0.06);
   }
+  .sym-render::before { width: 1px; height: 100%; left: 50%; }
+  .sym-render::after { height: 1px; width: 100%; top: 50%; }
+  .sym-render svg { max-width: 140px; max-height: 140px; position: relative; z-index: 1; }
+  .sym-render.lg svg { max-width: 260px; max-height: 260px; }
+  .sym-render.lg { min-width: 280px; min-height: 280px; }
 
-  .panel-body .meta {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    text-align: center;
-    line-height: 1.6;
+  .pnl-body .meta {
+    font-family: var(--mono); font-size: 9px; color: var(--text-dim);
+    text-align: center; font-weight: 300;
   }
-
-  .panel-body .meta span { color: var(--text); }
+  .pnl-body .meta b { color: var(--text); font-weight: 400; }
 
   .py-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    color: var(--text-dim);
-    min-height: 200px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 8px; color: var(--text-dim);
   }
-
-  .py-placeholder .icon {
-    font-size: 32px;
-    opacity: 0.3;
-  }
-
-  .py-placeholder p {
-    font-size: 12px;
-    text-align: center;
-    max-width: 200px;
-    line-height: 1.6;
-  }
-
+  .py-placeholder .ico { font-size: 24px; opacity: 0.2; }
+  .py-placeholder p { font-family: var(--mono); font-size: 10px; text-align: center; max-width: 180px; font-weight: 300; }
   .py-placeholder code {
-    font-family: var(--mono);
-    font-size: 11px;
-    background: var(--bg);
-    padding: 2px 6px;
-    border-radius: 3px;
+    font-family: var(--mono); font-size: 9px; background: var(--surface);
+    padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border);
   }
 
-  /* ── SVG Source panel ── */
-  .svg-source {
+  .sz-toggle {
+    margin-left: auto; display: flex; gap: 1px;
+    background: var(--border); border-radius: var(--r); overflow: hidden;
+  }
+  .sz-toggle button {
+    background: var(--surface); border: none; color: var(--text-dim);
+    font-family: var(--mono); font-size: 9px; padding: 2px 7px;
+    cursor: pointer; font-weight: 400;
+  }
+  .sz-toggle button.on { background: var(--accent); color: var(--bg); font-weight: 500; }
+
+  /* -- Tab bar -- */
+  .tab-bar {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .svg-source .panel-header {
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .svg-source .panel-header:hover { background: var(--surface3); }
-
-  .svg-source .panel-header .toggle {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-dim);
-  }
-
-  .svg-source pre {
-    padding: 16px;
-    font-family: var(--mono);
-    font-size: 11px;
-    line-height: 1.5;
-    color: var(--text-dim);
-    overflow-x: auto;
-    background: var(--bg);
-    max-height: 300px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
-
-  .svg-source.collapsed pre { display: none; }
-
-  /* ── Metadata table ── */
-  .metadata-grid {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .metadata-grid table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .metadata-grid th {
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-dim);
-    padding: 8px 16px;
-    background: var(--surface2);
     border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-shrink: 0;
   }
 
-  .metadata-grid td {
-    padding: 6px 16px;
-    font-family: var(--mono);
-    font-size: 12px;
-    border-bottom: 1px solid var(--border);
+  .tab-btn {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    color: var(--text-dim); background: none; border: none;
+    padding: 6px 16px; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color .12s, border-color .12s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.on { color: var(--accent-bright); border-bottom-color: var(--accent); font-weight: 500; }
+
+  /* -- Tab panels -- */
+  .tab-panels {
+    overflow: hidden; position: relative;
+  }
+  .tab-panel {
+    position: absolute; inset: 0;
+    overflow-y: auto; padding: 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity .12s;
+  }
+  .tab-panel.on { opacity: 1; pointer-events: auto; position: relative; height: 100%; }
+
+  /* Metadata */
+  .meta-tbl { width: 100%; border-collapse: collapse; }
+  .meta-tbl td {
+    padding: 3px 14px; font-family: var(--mono); font-size: 10px;
+    border-bottom: 1px solid var(--border); font-weight: 300;
+  }
+  .meta-tbl td:first-child { color: var(--text-dim); width: 120px; }
+  .meta-tbl td:last-child { color: var(--text-bright); font-weight: 400; }
+
+  /* SVG source */
+  .src-pre {
+    padding: 10px 14px; font-family: var(--mono); font-size: 10px;
+    line-height: 1.5; color: var(--text-dim); white-space: pre-wrap;
+    word-break: break-all; font-weight: 300; margin: 0;
   }
 
-  .metadata-grid tr:last-child td { border-bottom: none; }
-
-  .metadata-grid td:first-child { color: var(--text-dim); }
-  .metadata-grid td:last-child { color: var(--text-bright); }
-
-  /* ── Affiliation strip ── */
-  .affiliation-strip {
+  /* Gallery */
+  .gal-controls {
+    padding: 8px 14px; display: flex; gap: 6px; align-items: center;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
   }
-
-  .affiliation-strip .strip-body {
-    padding: 16px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+  .gal-controls select {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--r);
+    color: var(--text); font-family: var(--mono); font-size: 10px;
+    padding: 3px 6px; cursor: pointer; outline: none;
   }
-
-  .aff-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: border-color 0.15s;
+  .gal-controls select option { background: var(--surface); }
+  .gal-controls button {
+    background: var(--accent); border: none; border-radius: var(--r);
+    color: var(--bg); font-family: var(--mono); font-size: 10px;
+    font-weight: 500; padding: 3px 10px; cursor: pointer;
   }
+  .gal-controls button:hover { background: var(--accent-bright); }
+  .gal-count { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
 
-  .aff-card:hover { border-color: var(--accent); }
-  .aff-card.active { border-color: var(--accent); background: var(--surface2); }
-
-  .aff-card svg { max-width: 48px; max-height: 48px; }
-
-  .aff-card .aff-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-dim);
-  }
-
-  /* ── Gallery (all SIDCs for a symbol set) ── */
-  .gallery-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .gallery-controls {
-    padding: 12px 16px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .gallery-controls select {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 4px 8px;
-    cursor: pointer;
-    outline: none;
-  }
-
-  .gallery-controls select:focus { border-color: var(--border-focus); }
-  .gallery-controls select option { background: var(--surface); }
-
-  .gallery-controls button {
-    background: var(--accent);
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-
-  .gallery-controls button:hover { background: #5a8aff; }
-
-  .gallery-grid {
+  .gal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 4px;
-    padding: 8px;
-    max-height: 500px;
-    overflow-y: auto;
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+    gap: 2px; padding: 6px; overflow-y: auto;
+  }
+  .gi {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 4px 2px 3px; cursor: pointer; border-radius: var(--r);
+    transition: background .08s;
+  }
+  .gi:hover { background: var(--surface2); }
+  .gi svg { max-width: 40px; max-height: 40px; }
+  .gi span {
+    font-family: var(--mono); font-size: 7px; color: var(--text-dim);
+    text-align: center; margin-top: 1px;
   }
 
-  .gallery-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 6px 2px 4px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background 0.1s;
-  }
-
-  .gallery-item:hover { background: var(--surface2); }
-
-  .gallery-item svg { max-width: 48px; max-height: 48px; }
-
-  .gallery-item .gi-code {
-    font-family: var(--mono);
-    font-size: 8px;
-    color: var(--text-dim);
-    text-align: center;
-    margin-top: 2px;
-    word-break: break-all;
-  }
-
-  .gallery-count {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    padding: 0 16px;
-  }
-
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
-
-  /* ── Size toggle ── */
-  .size-toggle {
-    display: flex;
-    gap: 1px;
-    background: var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .size-toggle button {
-    background: var(--surface2);
-    border: none;
-    color: var(--text-dim);
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 3px 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .size-toggle button.active {
-    background: var(--accent);
-    color: #fff;
-  }
 </style>
 </head>
 <body>
 
 <div class="app">
   <header>
-    <h1><span>mil</span>symbol <span>▸</span> playground</h1>
-    <span class="subtitle">JS reference ↔ Python port comparison</span>
-    <div class="header-right">
-      <span class="badge badge-js">JS ● Live</span>
-      <span class="badge badge-py">PY ● Not Connected</span>
+    <div class="logo"><b>mil</b>symbol <b>▸</b> playground</div>
+    <span class="tagline">JS reference ↔ Python port</span>
+    <div class="hdr-right">
+      <span class="pill pill-js"><span class="d"></span> JS Live</span>
+      <span class="pill pill-py" id="py-pill"><span class="d"></span> PY Offline</span>
     </div>
   </header>
 
   <aside class="sidebar">
-    <div class="sidc-input-group">
-      <label>SIDC Code</label>
+    <div class="sb-group">
+      <span class="sb-label">SIDC Code</span>
       <input type="text" class="sidc-input" id="sidc-input" value="SFG-UCI----D" spellcheck="false" autocomplete="off">
       <div class="validity" id="validity"></div>
     </div>
 
-    <div class="sidebar-section">
-      <h3>Options</h3>
-      <div class="option-row">
-        <label>Size</label>
-        <input type="number" id="opt-size" value="80" min="10" max="400" step="10">
-      </div>
-      <div class="option-row">
-        <label>Quantity</label>
-        <input type="text" id="opt-quantity" value="" placeholder="e.g. 200">
-      </div>
-      <div class="option-row">
-        <label>Type</label>
-        <input type="text" id="opt-type" value="" placeholder="e.g. MACHINE GUN">
-      </div>
-      <div class="option-row">
-        <label>Designation</label>
-        <input type="text" id="opt-designation" value="" placeholder="e.g. 3-C">
-      </div>
-      <div class="option-row">
-        <label>Staff Cmts</label>
-        <input type="text" id="opt-staff" value="" placeholder="e.g. FOR REINFORCEMENTS">
-      </div>
-      <div class="option-row">
-        <label>Direction</label>
-        <input type="number" id="opt-direction" value="" placeholder="0-360" min="0" max="360">
-      </div>
+    <div class="sb-group">
+      <span class="sb-label">Options</span>
+      <div class="opt-row"><label>Size</label><input type="number" id="opt-size" value="80" min="10" max="400" step="10"></div>
+      <div class="opt-row"><label>Quantity</label><input type="text" id="opt-quantity" placeholder="200"></div>
+      <div class="opt-row"><label>Type</label><input type="text" id="opt-type" placeholder="MACHINE GUN"></div>
+      <div class="opt-row"><label>Designation</label><input type="text" id="opt-designation" placeholder="3-C"></div>
+      <div class="opt-row"><label>Staff Cmts</label><input type="text" id="opt-staff" placeholder="REINFORCEMENTS"></div>
+      <div class="opt-row"><label>Direction</label><input type="number" id="opt-direction" placeholder="0-360" min="0" max="360"></div>
     </div>
 
-    <div class="sidebar-section">
-      <h3>Quick Picks</h3>
+    <div class="sb-group" style="padding-bottom:4px">
+      <span class="sb-label">Quick Picks</span>
     </div>
-    <div id="quick-picks"></div>
+    <div class="qp-scroll" id="quick-picks"></div>
   </aside>
 
-  <main class="main" id="main-content">
-    <!-- Affiliation strip -->
-    <div class="affiliation-strip">
-      <div class="panel-header"><h2>Affiliations</h2></div>
-      <div class="strip-body" id="affiliation-strip"></div>
-    </div>
+  <div class="main">
+    <div class="aff-bar" id="aff-bar"></div>
 
-    <!-- Comparison panels -->
-    <div class="comparison">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="dot dot-js"></div>
-          <h2>JavaScript (milsymbol)</h2>
-          <div class="size-toggle" style="margin-left:auto">
-            <button onclick="setRenderSize('normal')" class="active" id="sz-normal">1×</button>
-            <button onclick="setRenderSize('large')" id="sz-large">2×</button>
+    <div class="content">
+      <!-- Comparison -->
+      <div class="cmp">
+        <div class="pnl">
+          <div class="pnl-hd">
+            <span class="tag t-js">JS</span>
+            <h2>milsymbol</h2>
+            <div class="sz-toggle">
+              <button onclick="setSize('n')" class="on" id="sz-n">1×</button>
+              <button onclick="setSize('lg')" id="sz-lg">2×</button>
+            </div>
+          </div>
+          <div class="pnl-body">
+            <div class="sym-render" id="js-render"></div>
+            <div class="meta" id="js-meta"></div>
           </div>
         </div>
-        <div class="panel-body">
-          <div class="symbol-render" id="js-render"></div>
-          <div class="meta" id="js-meta"></div>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header">
-          <div class="dot dot-py"></div>
-          <h2>Python (port)</h2>
-        </div>
-        <div class="panel-body">
-          <div class="py-placeholder" id="py-render">
-            <div class="icon">🐍</div>
-            <p>Connect a FastAPI backend to enable comparison</p>
-            <p><code>GET /symbol?sidc=...&size=...</code></p>
+        <div class="pnl">
+          <div class="pnl-hd">
+            <span class="tag t-py">PY</span>
+            <h2>Python port</h2>
+          </div>
+          <div class="pnl-body">
+            <div class="py-placeholder" id="py-render">
+              <div class="ico">🐍</div>
+              <p>Start the FastAPI server to compare</p>
+              <code>uvicorn server:app --port 8000</code>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Metadata -->
-    <div class="metadata-grid">
-      <div class="panel-header"><h2>Symbol Metadata</h2></div>
-      <table>
-        <tbody id="metadata-body"></tbody>
-      </table>
-    </div>
-
-    <!-- SVG Source -->
-    <div class="svg-source collapsed" id="svg-source-panel">
-      <div class="panel-header" onclick="toggleSource()">
-        <h2>SVG Source</h2>
-        <span class="toggle" id="source-toggle">▸ show</span>
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab-btn on" onclick="showTab('metadata')">Metadata</button>
+        <button class="tab-btn" onclick="showTab('source')">SVG Source</button>
+        <button class="tab-btn" onclick="showTab('gallery')">Gallery</button>
       </div>
-      <pre id="svg-source-code"></pre>
-    </div>
 
-    <!-- Gallery -->
-    <div class="gallery-section">
-      <div class="panel-header"><h2>Symbol Gallery</h2></div>
-      <div class="gallery-controls">
-        <select id="gallery-set">
-          <option value="10">10 — Land Unit</option>
-          <option value="15">15 — Land Equipment</option>
-          <option value="01">01 — Air</option>
-          <option value="05">05 — Air Missile</option>
-          <option value="20">20 — Sea Surface</option>
-          <option value="35">35 — Sea Subsurface</option>
-          <option value="25">25 — Control Measure</option>
-          <option value="40">40 — Activities</option>
-          <option value="30">30 — Land Installation</option>
-          <option value="60">60 — Cyberspace</option>
-          <option value="36">36 — Mine Warfare</option>
-          <option value="27">27 — Land Civilian</option>
-          <option value="11">11 — Dismounted Individual</option>
-        </select>
-        <button onclick="loadGallery()">Load</button>
-        <span class="gallery-count" id="gallery-count"></span>
+      <!-- Tab panels -->
+      <div class="tab-panels">
+        <div class="tab-panel on" id="tab-metadata">
+          <table class="meta-tbl"><tbody id="meta-body"></tbody></table>
+        </div>
+        <div class="tab-panel" id="tab-source">
+          <pre class="src-pre" id="svg-src"></pre>
+        </div>
+        <div class="tab-panel" id="tab-gallery">
+          <div class="gal-controls">
+            <select id="gal-set">
+              <option value="10">10 — Land Unit</option>
+              <option value="15">15 — Land Equipment</option>
+              <option value="01">01 — Air</option>
+              <option value="05">05 — Air Missile</option>
+              <option value="20">20 — Sea Surface</option>
+              <option value="35">35 — Sea Subsurface</option>
+              <option value="25">25 — Control Measure</option>
+              <option value="40">40 — Activities</option>
+              <option value="30">30 — Land Installation</option>
+              <option value="60">60 — Cyberspace</option>
+              <option value="36">36 — Mine Warfare</option>
+              <option value="27">27 — Land Civilian</option>
+              <option value="11">11 — Dismounted Individual</option>
+            </select>
+            <button onclick="loadGallery()">Load</button>
+            <span class="gal-count" id="gal-count"></span>
+          </div>
+          <div class="gal-grid" id="gal-grid"></div>
+        </div>
       </div>
-      <div class="gallery-grid" id="gallery-grid"></div>
     </div>
-  </main>
+  </div>
 </div>
 
 <script src="milsymbol.js"></script>
 <script>
-// ── Quick picks data ──
-const QUICK_PICKS = [
-  {sidc:"SFG-UCI----D", name:"Infantry"},
-  {sidc:"SFG-UCIZ---", name:"Mech Infantry"},
-  {sidc:"SFG-UCA----", name:"Armor"},
-  {sidc:"SFG-UCD----", name:"Air Defense"},
-  {sidc:"SFG-UCE----", name:"Engineer"},
-  {sidc:"SFG-UCS----", name:"Signal"},
-  {sidc:"SFG-UCAA---", name:"Armor Tracked"},
-  {sidc:"SHG-UCI----", name:"Hostile Infantry"},
-  {sidc:"SNG-UCI----", name:"Neutral Infantry"},
-  {sidc:"SUG-UCI----", name:"Unknown Infantry"},
-  {sidc:"SFGPEWRH--MT", name:"Equipment"},
-  {sidc:"SFA-MFQ----", name:"Fighter"},
-  {sidc:"SFA-MHU----", name:"Utility Helo"},
-  {sidc:"10031000001211000000", name:"Infantry (2525)"},
-  {sidc:"10031000001205000000", name:"Armor (2525)"},
-  {sidc:"10031500001101000000", name:"Fixed Wing (2525)"},
-  {sidc:"10032000001100000000", name:"Ship (2525)"},
-  {sidc:"10031000001206000000", name:"Artillery (2525)"},
-  {sidc:"10031000001208000000", name:"Engineer (2525)"},
-  {sidc:"10031000001216000000", name:"Medical (2525)"},
+const QP = [
+  {s:"SFG-UCI----D",n:"Infantry"},
+  {s:"SFG-UCIZ---",n:"Mech Infantry"},
+  {s:"SFG-UCA----",n:"Armor"},
+  {s:"SFG-UCD----",n:"Air Defense"},
+  {s:"SFG-UCE----",n:"Engineer"},
+  {s:"SFG-UCS----",n:"Signal"},
+  {s:"SFG-UCAA---",n:"Armor Tracked"},
+  {s:"SHG-UCI----",n:"Hostile Infantry"},
+  {s:"SNG-UCI----",n:"Neutral Infantry"},
+  {s:"SUG-UCI----",n:"Unknown Infantry"},
+  {s:"SFGPEWRH--MT",n:"Equipment"},
+  {s:"SFA-MFQ----",n:"Fighter"},
+  {s:"SFA-MHU----",n:"Utility Helo"},
+  {s:"10031000001211000000",n:"Infantry (2525)"},
+  {s:"10031000001205000000",n:"Armor (2525)"},
+  {s:"10031500001101000000",n:"Fixed Wing (2525)"},
+  {s:"10032000001100000000",n:"Ship (2525)"},
+  {s:"10031000001206000000",n:"Artillery (2525)"},
+  {s:"10031000001208000000",n:"Engineer (2525)"},
+  {s:"10031000001216000000",n:"Medical (2525)"},
 ];
 
-// ── Affiliation maps ──
-const AFFILIATIONS_LETTER = {
-  "F": "Friendly",
-  "H": "Hostile",
-  "N": "Neutral",
-  "U": "Unknown",
-  "A": "Assumed Frd",
-  "S": "Suspect",
-};
+const AFF_L = {F:"Friendly",H:"Hostile",N:"Neutral",U:"Unknown",A:"Asmd Frd",S:"Suspect"};
+const AFF_N = {"3":"Friendly","6":"Hostile","4":"Neutral","1":"Unknown","2":"Asmd Frd","5":"Suspect"};
 
-const AFFILIATIONS_NUMBER = {
-  "3": "Friendly",
-  "6": "Hostile",
-  "4": "Neutral",
-  "1": "Unknown",
-  "2": "Assumed Frd",
-  "5": "Suspect",
-};
+let large = false;
 
-// ── State ──
-let currentSidc = "SFG-UCI----D";
-let currentOptions = { size: 80 };
-let renderLarge = false;
-
-// ── Render ──
-function getOptions() {
-  const opts = { size: parseInt(document.getElementById('opt-size').value) || 80 };
-  const q = document.getElementById('opt-quantity').value;
-  if (q) opts.quantity = q;
-  const t = document.getElementById('opt-type').value;
-  if (t) opts.type = t;
-  const d = document.getElementById('opt-designation').value;
-  if (d) opts.uniqueDesignation = d;
-  const s = document.getElementById('opt-staff').value;
-  if (s) opts.staffComments = s;
-  const dir = document.getElementById('opt-direction').value;
-  if (dir !== "") opts.direction = parseFloat(dir);
-  return opts;
+function opts() {
+  const o = {size: parseInt($('opt-size').value)||80};
+  const q = $('opt-quantity').value; if(q) o.quantity = q;
+  const t = $('opt-type').value; if(t) o.type = t;
+  const d = $('opt-designation').value; if(d) o.uniqueDesignation = d;
+  const s = $('opt-staff').value; if(s) o.staffComments = s;
+  const dir = $('opt-direction').value; if(dir!=="") o.direction = parseFloat(dir);
+  return o;
 }
 
-function renderSymbol() {
-  const sidc = document.getElementById('sidc-input').value.trim();
-  currentSidc = sidc;
-  const opts = getOptions();
-  currentOptions = opts;
+function $(id) { return document.getElementById(id); }
 
+function render() {
+  const sidc = $('sidc-input').value.trim();
+  const o = opts();
   let sym;
-  try {
-    sym = new ms.Symbol(sidc, opts);
-  } catch(e) {
-    document.getElementById('validity').textContent = '✗ Error: ' + e.message;
-    document.getElementById('validity').className = 'validity invalid';
+  try { sym = new ms.Symbol(sidc, o); } catch(e) {
+    $('validity').textContent = '✗ '+e.message;
+    $('validity').className = 'validity invalid';
     return;
   }
 
-  const valid = sym.isValid();
-  const vEl = document.getElementById('validity');
-  if (valid) {
-    vEl.textContent = '✓ Valid';
-    vEl.className = 'validity valid';
-    document.getElementById('sidc-input').classList.remove('invalid');
-  } else {
-    vEl.textContent = '✗ Invalid SIDC';
-    vEl.className = 'validity invalid';
-    document.getElementById('sidc-input').classList.add('invalid');
-  }
+  const v = sym.isValid();
+  $('validity').textContent = v ? '✓ Valid' : '✗ Invalid';
+  $('validity').className = 'validity '+(v?'valid':'invalid');
+  $('sidc-input').classList.toggle('invalid',!v);
 
-  // Render JS symbol
   const svg = sym.asSVG();
-  const renderEl = document.getElementById('js-render');
-  renderEl.innerHTML = svg;
-  renderEl.className = 'symbol-render' + (renderLarge ? ' large' : '');
+  const re = $('js-render');
+  re.innerHTML = svg;
+  re.className = 'sym-render'+(large?' lg':'');
 
-  // Meta
-  const anchor = sym.getAnchor();
-  const size = sym.getSize();
-  const meta = sym.getMetadata();
-  document.getElementById('js-meta').innerHTML =
-    `anchor: <span>${anchor.x.toFixed(1)}, ${anchor.y.toFixed(1)}</span> · ` +
-    `size: <span>${size.width.toFixed(1)} × ${size.height.toFixed(1)}</span>`;
+  const a = sym.getAnchor(), sz = sym.getSize(), m = sym.getMetadata();
+  $('js-meta').innerHTML =
+    `anchor: <b>${a.x.toFixed(1)}, ${a.y.toFixed(1)}</b> · size: <b>${sz.width.toFixed(1)} × ${sz.height.toFixed(1)}</b>`;
 
   // Metadata table
-  const tbody = document.getElementById('metadata-body');
-  const metaRows = [
-    ['SIDC', sidc],
-    ['Valid', valid ? 'Yes' : 'No'],
-    ['Dimension', meta.dimension || '—'],
-    ['Affiliation', meta.affiliation || '—'],
-    ['Context', meta.context || '—'],
-    ['Standard', meta.standard || '—'],
-    ['Entity', meta.entity || '—'],
-    ['Entity Type', meta.entityType || '—'],
-    ['Entity Subtype', meta.entitySubtype || '—'],
-    ['Icon Width', size.width.toFixed(1)],
-    ['Icon Height', size.height.toFixed(1)],
-    ['Anchor X', anchor.x.toFixed(1)],
-    ['Anchor Y', anchor.y.toFixed(1)],
+  const rows = [
+    ['SIDC',sidc],['Valid',v?'Yes':'No'],
+    ['Dimension',m.dimension||'—'],['Affiliation',m.affiliation||'—'],
+    ['Context',m.context||'—'],['Standard',m.standard||'—'],
+    ['Entity',m.entity||'—'],['Entity Type',m.entityType||'—'],
+    ['Entity Subtype',m.entitySubtype||'—'],
+    ['Width',sz.width.toFixed(1)],['Height',sz.height.toFixed(1)],
+    ['Anchor X',a.x.toFixed(1)],['Anchor Y',a.y.toFixed(1)],
   ];
-  tbody.innerHTML = metaRows.map(([k,v]) =>
-    `<tr><td>${k}</td><td>${v}</td></tr>`
-  ).join('');
+  $('meta-body').innerHTML = rows.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
 
   // SVG source
-  document.getElementById('svg-source-code').textContent = formatSvg(svg);
+  $('svg-src').textContent = svg.replace(/></g,'>\n<');
 
-  // Affiliation strip
-  renderAffiliationStrip(sidc);
+  // Affiliations
+  renderAff(sidc);
 
-  // Try Python backend
-  fetchPython(sidc, opts);
+  // Python
+  fetchPy(sidc, o);
 }
 
-function formatSvg(svg) {
-  return svg.replace(/></g, '>\n<').replace(/\n\n/g, '\n');
-}
+function renderAff(sidc) {
+  const bar = $('aff-bar');
+  bar.innerHTML = '';
+  const isNum = /^\d+$/.test(sidc);
 
-function renderAffiliationStrip(sidc) {
-  const strip = document.getElementById('affiliation-strip');
-  strip.innerHTML = '';
-
-  const isNumber = /^\d+$/.test(sidc);
-
-  if (isNumber && sidc.length >= 20) {
-    for (const [code, label] of Object.entries(AFFILIATIONS_NUMBER)) {
-      const modSidc = sidc.slice(0, 6) + code + sidc.slice(7);
-      const sym = new ms.Symbol(modSidc, { size: 40 });
-      const card = document.createElement('div');
-      card.className = 'aff-card' + (sidc[6] === code ? ' active' : '');
-      card.innerHTML = sym.asSVG() + `<span class="aff-label">${label}</span>`;
-      card.onclick = () => {
-        document.getElementById('sidc-input').value = modSidc;
-        renderSymbol();
-      };
-      strip.appendChild(card);
+  if (isNum && sidc.length >= 20) {
+    for (const [c,lbl] of Object.entries(AFF_N)) {
+      const ms2 = sidc.slice(0,3)+c+sidc.slice(4);
+      const s = new ms.Symbol(ms2,{size:32});
+      const d = document.createElement('div');
+      d.className = 'ac'+(sidc[3]===c?' on':'');
+      d.innerHTML = s.asSVG()+`<span>${lbl}</span>`;
+      d.onclick = ()=>{ $('sidc-input').value=ms2; render(); };
+      bar.appendChild(d);
     }
-  } else if (sidc.length >= 2) {
-    for (const [code, label] of Object.entries(AFFILIATIONS_LETTER)) {
-      const modSidc = sidc[0] + code + sidc.slice(2);
-      const sym = new ms.Symbol(modSidc, { size: 40 });
-      const card = document.createElement('div');
-      card.className = 'aff-card' + (sidc[1].toUpperCase() === code ? ' active' : '');
-      card.innerHTML = sym.asSVG() + `<span class="aff-label">${label}</span>`;
-      card.onclick = () => {
-        document.getElementById('sidc-input').value = modSidc;
-        renderSymbol();
-      };
-      strip.appendChild(card);
+  } else if (sidc.length>=2) {
+    for (const [c,lbl] of Object.entries(AFF_L)) {
+      const ms2 = sidc[0]+c+sidc.slice(2);
+      const s = new ms.Symbol(ms2,{size:32});
+      const d = document.createElement('div');
+      d.className = 'ac'+(sidc[1].toUpperCase()===c?' on':'');
+      d.innerHTML = s.asSVG()+`<span>${lbl}</span>`;
+      d.onclick = ()=>{ $('sidc-input').value=ms2; render(); };
+      bar.appendChild(d);
     }
   }
 }
 
-// ── Python backend (placeholder) ──
-async function fetchPython(sidc, opts) {
-  const pyEl = document.getElementById('py-render');
-  // Try to connect to FastAPI backend
+async function fetchPy(sidc, o) {
+  const el = $('py-render');
   try {
-    const params = new URLSearchParams({ sidc, size: opts.size || 80 });
-    if (opts.quantity) params.set('quantity', opts.quantity);
-    if (opts.type) params.set('type', opts.type);
-    if (opts.uniqueDesignation) params.set('designation', opts.uniqueDesignation);
-
-    const resp = await fetch(`http://localhost:8000/symbol?${params}`, { signal: AbortSignal.timeout(1000) });
-    if (resp.ok) {
-      const data = await resp.json();
-      pyEl.innerHTML = `
-        <div class="symbol-render${renderLarge ? ' large' : ''}">${data.svg}</div>
+    const p = new URLSearchParams({sidc, size: o.size||80});
+    if(o.quantity) p.set('quantity',o.quantity);
+    if(o.type) p.set('type',o.type);
+    if(o.uniqueDesignation) p.set('designation',o.uniqueDesignation);
+    const r = await fetch(`http://localhost:8000/symbol?${p}`,{signal:AbortSignal.timeout(1500)});
+    if(r.ok) {
+      const d = await r.json();
+      el.innerHTML = `
+        <div class="sym-render${large?' lg':''}">${d.svg}</div>
         <div class="meta">
-          anchor: <span>${data.anchor?.x?.toFixed(1) || '?'}, ${data.anchor?.y?.toFixed(1) || '?'}</span> ·
-          size: <span>${data.size?.width?.toFixed(1) || '?'} × ${data.size?.height?.toFixed(1) || '?'}</span>
+          anchor: <b>${d.anchor?.x?.toFixed(1)||'?'}, ${d.anchor?.y?.toFixed(1)||'?'}</b> ·
+          size: <b>${d.size?.width?.toFixed(1)||'?'} × ${d.size?.height?.toFixed(1)||'?'}</b>
         </div>`;
-
-      // Update header badge
-      document.querySelector('.badge-py').textContent = 'PY ● Live';
-      document.querySelector('.badge-py').style.opacity = '1';
+      const pill = $('py-pill');
+      pill.innerHTML = '<span class="d"></span> PY Live';
+      pill.style.opacity = '1';
     }
-  } catch(e) {
-    // Backend not available — keep placeholder
+  } catch(e) {}
+}
+
+function initQP() {
+  const c = $('quick-picks');
+  for (const q of QP) {
+    const s = new ms.Symbol(q.s,{size:22});
+    const b = document.createElement('button');
+    b.className = 'qp';
+    b.innerHTML = `<div class="qp-ic">${s.asSVG()}</div><div><div class="qp-nm">${q.n}</div><span class="qp-cd">${q.s}</span></div>`;
+    b.onclick = ()=>{ $('sidc-input').value=q.s; render(); };
+    c.appendChild(b);
   }
 }
 
-// ── Quick picks ──
-function initQuickPicks() {
-  const container = document.getElementById('quick-picks');
-  for (const qp of QUICK_PICKS) {
-    const sym = new ms.Symbol(qp.sidc, { size: 28 });
-    const btn = document.createElement('button');
-    btn.className = 'quick-pick';
-    btn.innerHTML = `
-      <div class="qp-icon">${sym.asSVG()}</div>
-      <div>
-        <div class="qp-label">${qp.name}</div>
-        <span class="qp-sidc">${qp.sidc}</span>
-      </div>`;
-    btn.onclick = () => {
-      document.getElementById('sidc-input').value = qp.sidc;
-      renderSymbol();
-    };
-    container.appendChild(btn);
-  }
+function showTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('on', b.textContent.toLowerCase().includes(id.slice(0,3))));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('on', p.id==='tab-'+id));
 }
 
-// ── Gallery ──
 function loadGallery() {
-  const ss = document.getElementById('gallery-set').value;
-  const grid = document.getElementById('gallery-grid');
-  grid.innerHTML = '<div style="padding:16px;color:var(--text-dim)">Scanning...</div>';
-
-  // Use requestAnimationFrame to not block UI
-  requestAnimationFrame(() => {
+  const ss = $('gal-set').value;
+  const grid = $('gal-grid');
+  grid.innerHTML = '<div style="padding:12px;color:var(--text-dim);font-family:var(--mono);font-size:10px">Scanning…</div>';
+  requestAnimationFrame(()=>{
     const items = [];
-    for (let e = 0; e < 100; e++) {
-      for (let t = 0; t < 100; t++) {
-        for (let st = 0; st < 100; st++) {
-          const entity = String(e).padStart(2,'0') + String(t).padStart(2,'0') + String(st).padStart(2,'0');
-          const sidc = "1003" + ss + "0000" + entity + "0000";
-          const s = new ms.Symbol(sidc, { size: 30 });
-          if (s.isValid()) {
-            items.push({ sidc, svg: s.asSVG(), entity });
-          }
-        }
-      }
+    for(let e=0;e<100;e++) for(let t=0;t<100;t++) for(let st=0;st<100;st++) {
+      const ent = String(e).padStart(2,'0')+String(t).padStart(2,'0')+String(st).padStart(2,'0');
+      const sidc = "1003"+ss+"0000"+ent+"0000";
+      const s = new ms.Symbol(sidc,{size:24});
+      if(s.isValid()) items.push({sidc, svg:s.asSVG(), ent});
     }
-
     grid.innerHTML = '';
-    document.getElementById('gallery-count').textContent = items.length + ' symbols';
-
-    for (const item of items) {
-      const div = document.createElement('div');
-      div.className = 'gallery-item';
-      div.innerHTML = item.svg + `<span class="gi-code">${item.entity}</span>`;
-      div.onclick = () => {
-        document.getElementById('sidc-input').value = item.sidc;
-        renderSymbol();
-        document.getElementById('main-content').scrollTop = 0;
-      };
-      grid.appendChild(div);
+    $('gal-count').textContent = items.length+' symbols';
+    for(const it of items) {
+      const d = document.createElement('div');
+      d.className = 'gi';
+      d.innerHTML = it.svg+`<span>${it.ent}</span>`;
+      d.onclick = ()=>{ $('sidc-input').value=it.sidc; render(); showTab('metadata'); };
+      grid.appendChild(d);
     }
   });
 }
 
-// ── Helpers ──
-function toggleSource() {
-  const panel = document.getElementById('svg-source-panel');
-  const toggle = document.getElementById('source-toggle');
-  panel.classList.toggle('collapsed');
-  toggle.textContent = panel.classList.contains('collapsed') ? '▸ show' : '▾ hide';
+function setSize(s) {
+  large = s==='lg';
+  $('sz-n').classList.toggle('on',!large);
+  $('sz-lg').classList.toggle('on',large);
+  render();
 }
 
-function setRenderSize(size) {
-  renderLarge = size === 'large';
-  document.getElementById('sz-normal').classList.toggle('active', !renderLarge);
-  document.getElementById('sz-large').classList.toggle('active', renderLarge);
-  renderSymbol();
-}
+['sidc-input','opt-size','opt-quantity','opt-type','opt-designation','opt-staff','opt-direction']
+  .forEach(id=>$(id).addEventListener('input', render));
 
-// ── Event listeners ──
-document.getElementById('sidc-input').addEventListener('input', renderSymbol);
-document.getElementById('opt-size').addEventListener('input', renderSymbol);
-document.getElementById('opt-quantity').addEventListener('input', renderSymbol);
-document.getElementById('opt-type').addEventListener('input', renderSymbol);
-document.getElementById('opt-designation').addEventListener('input', renderSymbol);
-document.getElementById('opt-staff').addEventListener('input', renderSymbol);
-document.getElementById('opt-direction').addEventListener('input', renderSymbol);
-
-// ── Init ──
-initQuickPicks();
-renderSymbol();
+initQP();
+render();
 </script>
-
 </body>
 </html>
