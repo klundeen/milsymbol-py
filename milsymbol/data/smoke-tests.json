@@ -1,0 +1,170 @@
+[
+  {
+    "sidc": "10031000001211000000",
+    "name": "Friendly Infantry (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"86.4\" viewBox=\"21 46 158 108\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 86.4
+    }
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "name": "Friendly Infantry (Let)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"108.4\" viewBox=\"21 18.5 158 135.5\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 65.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 108.4
+    }
+  },
+  {
+    "sidc": "10061000001211000000",
+    "name": "Hostile Infantry (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"121.6\" height=\"121.6\" viewBox=\"24 24 152 152\"><path d=\"M 100,28 L172,100 100,172 28,100 100,28 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,128,128)\" fill-opacity=\"1\" ></path><path d=\"M60,70L140,130M60,130L140,70\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 60.8,
+      "y": 60.8
+    },
+    "symbolSize": {
+      "width": 121.6,
+      "height": 121.6
+    }
+  },
+  {
+    "sidc": "SHG-UCI----",
+    "name": "Hostile Infantry (Let)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"121.6\" height=\"121.6\" viewBox=\"24 24 152 152\"><path d=\"M 100,28 L172,100 100,172 28,100 100,28 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,128,128)\" fill-opacity=\"1\" ></path><path d=\"M60,70L140,130M60,130L140,70\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 60.8,
+      "y": 60.8
+    },
+    "symbolSize": {
+      "width": 121.6,
+      "height": 121.6
+    }
+  },
+  {
+    "sidc": "10041500001101000000",
+    "name": "Neutral Fixed Wing (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"94.4\" height=\"94.4\" viewBox=\"41 41 118 118\"><path d=\"M45,45 l110,0 0,110 -110,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(170,255,170)\" fill-opacity=\"1\" ></path><g transform=\"translate(0,0)\" ><g transform=\"scale(1)\" ><path d=\"m 100,60 0,80 M 85,75 100,60 115,75\" stroke-width=\"3\" stroke=\"black\" fill=\"none\" ></path></g></g></svg>",
+    "anchor": {
+      "x": 47.2,
+      "y": 47.2
+    },
+    "symbolSize": {
+      "width": 94.4,
+      "height": 94.4
+    }
+  },
+  {
+    "sidc": "SNA-MFQ----",
+    "name": "Neutral Fighter (Let)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"94.4\" height=\"102.4\" viewBox=\"41 26 118 128\"><path d=\"M 45,150 L 45,30,155,30,155,150\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(170,255,170)\" fill-opacity=\"1\" ></path><path d=\"m 60,84 40,20 40,-20 0,8 -40,25 -40,-25 z\" stroke-width=\"3\" stroke=\"none\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 47.2,
+      "y": 59.2
+    },
+    "symbolSize": {
+      "width": 94.4,
+      "height": 102.4
+    }
+  },
+  {
+    "sidc": "10011000001211000000",
+    "name": "Unknown Infantry (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"117.2\" height=\"117.2\" viewBox=\"26.75 26.75 146.5 146.5\"><path d=\"M63,63 C63,20 137,20 137,63 C180,63 180,137 137,137 C137,180 63,180 63,137 C20,137 20,63 63,63 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,255,128)\" fill-opacity=\"1\" ></path><path d=\"M50,65L150,135M50,135L150,65\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 58.6,
+      "y": 58.6
+    },
+    "symbolSize": {
+      "width": 117.2,
+      "height": 117.2
+    }
+  },
+  {
+    "sidc": "SUG-UCI----",
+    "name": "Unknown Infantry (Let)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"117.2\" height=\"117.2\" viewBox=\"26.75 26.75 146.5 146.5\"><path d=\"M63,63 C63,20 137,20 137,63 C180,63 180,137 137,137 C137,180 63,180 63,137 C20,137 20,63 63,63 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,255,128)\" fill-opacity=\"1\" ></path><path d=\"M50,65L150,135M50,135L150,65\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 58.6,
+      "y": 58.6
+    },
+    "symbolSize": {
+      "width": 117.2,
+      "height": 117.2
+    }
+  },
+  {
+    "sidc": "10032000001100000000",
+    "name": "Friendly Ship (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"94.4\" viewBox=\"21 36 158 118\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><text x=\"100\" y=\"103\" text-anchor=\"middle\" font-size=\"39\" font-family=\"Arial\" font-weight=\"bold\" dominant-baseline=\"middle\" stroke-width=\"3\" stroke=\"none\" fill=\"black\" >MIL</text><path d=\"M85,48 85,40 115,40 115,48 100,46 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 51.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 94.4
+    }
+  },
+  {
+    "sidc": "10031000001205000000",
+    "name": "Friendly Armor (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"86.4\" viewBox=\"21 46 158 108\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M125,80 C150,80 150,120 125,120 L75,120 C50,120 50,80 75,80 Z\" stroke-width=\"3\" stroke=\"black\" fill=\"none\" ></path></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 86.4
+    }
+  },
+  {
+    "sidc": "SFG-UCA----",
+    "name": "Friendly Armor (Let)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"86.4\" viewBox=\"21 46 158 108\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M125,80 C150,80 150,120 125,120 L75,120 C50,120 50,80 75,80 Z\" stroke-width=\"3\" stroke=\"black\" fill=\"none\" ></path></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 86.4
+    }
+  },
+  {
+    "sidc": "10031000001206000000",
+    "name": "Friendly Artillery (Num)",
+    "valid": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"86.4\" viewBox=\"21 46 158 108\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M60,85 l40,15 40,-15 0,30 -40,-15 -40,15 z\" stroke-width=\"3\" stroke=\"none\" fill=\"black\" ></path></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 86.4
+    }
+  }
+]

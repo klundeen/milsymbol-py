@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "milsymbol"
+version = "0.1.0"
+description = "Military symbols (MIL-STD-2525 / STANAG APP-6) in Python — port of milsymbol.js"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Kevin Lundeen"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+keywords = ["military", "symbols", "MIL-STD-2525", "STANAG", "APP-6", "NATO", "svg"]
+
+[project.optional-dependencies]
+server = ["fastapi>=0.100", "uvicorn>=0.20"]
+dev = ["pytest>=7.0", "fastapi>=0.100", "uvicorn>=0.20"]
+
+[project.urls]
+Homepage = "https://github.com/klundeen/milsymbol-py"
+"Original JS Library" = "https://github.com/spatialillusions/milsymbol"
+
+[tool.setuptools.packages.find]
+include = ["milsymbol*"]
+
+[tool.setuptools.package-data]
+"milsymbol.data" = ["*.json", "*.json.gz"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
