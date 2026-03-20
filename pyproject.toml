@@ -49,6 +49,8 @@ include = ["milsymbol*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+addopts = "-m 'not slow'"
 
 [tool.mypy]
 ignore_missing_imports = true
