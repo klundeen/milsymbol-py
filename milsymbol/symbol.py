@@ -11,11 +11,13 @@ from typing import Optional
 
 from .renderer import render_svg
 from .textfields import compute_text_fields
+from .modifiers import compute_modifiers, parse_modifiers
 
 _DATA_DIR = Path(__file__).parent / "data"
 
 _number_data: Optional[dict] = None
 _letter_data: Optional[dict] = None
+_geometries: Optional[dict] = None
 
 
 def _load_number_data() -> dict:
@@ -32,6 +34,14 @@ def _load_letter_data() -> dict:
         with gzip.open(_DATA_DIR / "letter-data.json.gz", "rt", encoding="utf-8") as f:
             _letter_data = json.load(f)
     return _letter_data
+
+
+def _load_geometries() -> dict:
+    global _geometries
+    if _geometries is None:
+        with open(_DATA_DIR / "geometries.json") as f:
+            _geometries = json.load(f)
+    return _geometries
 
 
 _NUMBER_AFFILIATIONS = {
@@ -77,6 +87,26 @@ _SS_BASE_DIMENSION = {
 # Whether the symbol set represents a "unit" (affects text field mapping)
 _SS_IS_UNIT = {
     "10": True, "11": True, "27": True, "40": True,
+}
+
+# Map (dimension, affiliation) → geometry key for frame bbox lookup
+_FRAME_GEO_MAP = {
+    ("Ground", "Friend"): "GroundFriend", ("Ground", "Hostile"): "GroundHostile",
+    ("Ground", "Neutral"): "GroundNeutral", ("Ground", "Unknown"): "GroundUnknown",
+    ("Ground", "AssumedFriend"): "GroundFriend", ("Ground", "Suspect"): "GroundHostile",
+    ("Ground", "Pending"): "GroundUnknown",
+    ("Air", "Friend"): "AirFriend", ("Air", "Hostile"): "AirHostile",
+    ("Air", "Neutral"): "AirNeutral", ("Air", "Unknown"): "AirUnknown",
+    ("Air", "AssumedFriend"): "AirFriend", ("Air", "Suspect"): "AirHostile",
+    ("Air", "Pending"): "AirUnknown",
+    ("Sea", "Friend"): "SeaFriend", ("Sea", "Hostile"): "SeaHostile",
+    ("Sea", "Neutral"): "SeaNeutral", ("Sea", "Unknown"): "SeaUnknown",
+    ("Sea", "AssumedFriend"): "SeaFriend", ("Sea", "Suspect"): "SeaHostile",
+    ("Sea", "Pending"): "SeaUnknown",
+    ("Subsurface", "Friend"): "SubsurfaceFriend", ("Subsurface", "Hostile"): "SubsurfaceHostile",
+    ("Subsurface", "Neutral"): "SubsurfaceNeutral", ("Subsurface", "Unknown"): "SubsurfaceUnknown",
+    ("Subsurface", "AssumedFriend"): "SubsurfaceFriend", ("Subsurface", "Suspect"): "SubsurfaceHostile",
+    ("Subsurface", "Pending"): "SubsurfaceUnknown",
 }
 
 
@@ -200,7 +230,15 @@ class Symbol:
             self._bbox = entry["bb"]
             self._valid = True
         else:
-            self._valid = False
+            # Try normalizing modifier fields (pos 7=HQ/TF/FD, pos 8-9=echelon/mobility) to zero
+            base_sidc = sidc[:7] + "0" + "00" + sidc[10:]
+            if base_sidc in data:
+                entry = data[base_sidc]
+                self._draw_instructions = entry["di"]
+                self._bbox = entry["bb"]
+                self._valid = True
+            else:
+                self._valid = False
 
     def _resolve_letter(self):
         data = _load_letter_data()
@@ -272,8 +310,19 @@ class Symbol:
     def is_valid(self) -> bool:
         return self._valid is True
 
+    def _get_frame_bbox(self) -> dict:
+        """Get the frame geometry bbox (without echelon/modifier expansion)."""
+        dim = self._metadata.get("dimension", "Ground")
+        aff = self._metadata.get("affiliation", "Unknown")
+        geo_key = _FRAME_GEO_MAP.get((dim, aff))
+        if geo_key:
+            geos = _load_geometries()
+            if geo_key in geos:
+                return geos[geo_key]["bbox"]
+        return self._bbox
+
     def _compose(self):
-        """Compose final draw instructions and bbox, including text fields."""
+        """Compose final draw instructions and bbox, including modifiers and text fields."""
         if self._composed:
             return
         self._composed = True
@@ -319,23 +368,35 @@ class Symbol:
         }
 
         text_draw, text_bbox = compute_text_fields(
-            opts, self._metadata, self._bbox, style
+            opts, self._metadata, self._get_frame_bbox(), style
         )
 
-        if text_draw:
-            self._final_di = list(self._draw_instructions) + text_draw
-        else:
-            self._final_di = self._draw_instructions
+        # Compute modifiers (echelon, mobility, HQ/TF/FD) using frame bbox
+        mod_style = {
+            "stroke_width": self.stroke_width,
+            "hq_staff_length": style.get("hq_staff_length", 0),
+        }
+        mod_draw, mod_bbox = compute_modifiers(
+            self._metadata, self._get_frame_bbox(), mod_style
+        )
 
-        if text_bbox:
-            self._final_bbox = {
-                "x1": min(self._bbox["x1"], text_bbox["x1"]),
-                "y1": min(self._bbox["y1"], text_bbox["y1"]),
-                "x2": max(self._bbox["x2"], text_bbox["x2"]),
-                "y2": max(self._bbox["y2"], text_bbox["y2"]),
-            }
-        else:
-            self._final_bbox = self._bbox
+        # Merge: base draw instructions + modifiers + text fields
+        self._final_di = list(self._draw_instructions)
+        if mod_draw:
+            self._final_di.extend(mod_draw)
+        if text_draw:
+            self._final_di.extend(text_draw)
+
+        # Merge bounding boxes
+        self._final_bbox = dict(self._bbox)
+        for extra_bbox in (mod_bbox, text_bbox):
+            if extra_bbox:
+                self._final_bbox = {
+                    "x1": min(self._final_bbox["x1"], extra_bbox["x1"]),
+                    "y1": min(self._final_bbox["y1"], extra_bbox["y1"]),
+                    "x2": max(self._final_bbox["x2"], extra_bbox["x2"]),
+                    "y2": max(self._final_bbox["y2"], extra_bbox["y2"]),
+                }
 
     def get_anchor(self) -> dict:
         self._compose()
@@ -344,6 +405,18 @@ class Symbol:
             return {"x": 50, "y": 50}
         sw = float(self.stroke_width)
         ow = float(self.outline_width)
+
+        # HQ symbols: anchor at base of HQ staff line
+        if self._metadata.get("numberSIDC") and self._metadata.get("hq_tf_fd") in ("2", "3", "6", "7"):
+            frame_bb = self._get_frame_bbox()
+            hq_staff = 100  # default HQ staff length
+            ax = frame_bb["x1"]
+            ay = frame_bb["y2"] + hq_staff
+            return {
+                "x": (ax - bb["x1"] + sw + ow) * self.size / 100,
+                "y": (ay - bb["y1"] + sw + ow) * self.size / 100,
+            }
+
         return {
             "x": (100 - bb["x1"] + sw + ow) * self.size / 100,
             "y": (100 - bb["y1"] + sw + ow) * self.size / 100,

@@ -1,5 +1,7 @@
 # milsymbol-py
 
+[![Tests](https://github.com/klundeen/milsymbol-py/actions/workflows/tests.yml/badge.svg)](https://github.com/klundeen/milsymbol-py/actions/workflows/tests.yml)
+
 A reference implementation and test harness for porting
 [milsymbol](https://github.com/spatialillusions/milsymbol) (JavaScript)
 to Python — with a usable frozen renderer as a side effect.
@@ -103,6 +105,22 @@ input at build time, shipped the results, and wrote a Python "linker"
 to assemble them into SVG. The linker is trivial; the compiler port
 comes later — and when it does, we already have the full test corpus.
 
+### A note on process
+
+This project was built entirely through 3-hour conversation between Kevin
+Lundeen (a computer science professor at Seattle University) and
+Claude Opus 4.6. Kevin directed the architecture, asked the right
+questions, and pressure-tested the approach — but never read the
+milsymbol JS source code or the generated Python code directly.
+Claude analyzed the 33,000-line codebase, devised the extraction
+strategy, wrote the tooling, ported the renderer, and built the
+test harness. The project is a demonstration of what's possible
+when a senior engineer uses an LLM as a tool: the human provides
+judgment and direction, the machine provides the throughput and
+detail work. The comment that inspired this project observed that
+LLMs fail at tasks like porting JS libraries to Python. We didn't
+port the library — we found a way around the problem entirely.
+
 ---
 
 ## Install
@@ -178,8 +196,8 @@ cd playground && python -m http.server 3000
 | Number SIDCs (all affiliations) | 37,828 |
 | Letter SIDCs (all affiliations + echelons) | 71,388 |
 | Symbol sets | 19 |
-| Smoke tests (exact SVG match) | 12 / 12 |
-| Python lines of code | ~400 |
+| Tests (smoke + modifiers + combined) | 143 |
+| Python lines of code | ~800 |
 | Data (gzipped) | 2 MB |
 
 ## Regenerating data
@@ -192,17 +210,27 @@ cd milsymbol && npm install && npm run build && cd ..
 node tools/extract_data.mjs ./milsymbol ./milsymbol-py/milsymbol/data
 ```
 
+## Known upstream quirks
+
+These behaviors are inherited from the JS library and reproduced
+faithfully by the Python port:
+
+- **Quantity / echelon collision.** The quantity text field is
+  positioned relative to the frame bounding box, not the full symbol
+  including echelon dots. At larger sizes, quantity text can overlap
+  the echelon modifier.
+
 ## Roadmap
 
 - [x] Extract test oracle (109K reference symbols)
 - [x] Frozen renderer with exact SVG match
 - [x] Visual comparison playground
-- [x] Port text field placement (`textfields.js` was 893 lines)
-- [ ] Port echelon / mobility / HQ modifiers for number SIDCs
+- [x] Port text field placement (quantity, type, designation, etc.)
+- [x] Port echelon / mobility / HQ / TF / feint-dummy modifiers
 - [ ] Comprehensive test fixture (all 5,404 base symbols)
 - [ ] Port composition logic (Phase 2 — real port)
 - [ ] Extension API
-- [ ] Canvas / PNG output
+- [ ] PNG rasterization (via cairosvg or similar)
 
 ## License
 
