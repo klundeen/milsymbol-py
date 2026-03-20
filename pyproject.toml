@@ -45,7 +45,13 @@ Homepage = "https://github.com/klundeen/milsymbol-py"
 include = ["milsymbol*"]
 
 [tool.setuptools.package-data]
-"milsymbol.data" = ["*.json", "*.json.gz"]
+"milsymbol.data" = [
+    "number-data.json.gz",
+    "letter-data.json.gz",
+    "colormodes.json",
+    "dasharrays.json",
+    "geometries.json",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
