@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Optional
 
 from .renderer import render_svg
+from .textfields import compute_text_fields
 
 _DATA_DIR = Path(__file__).parent / "data"
 
@@ -62,6 +63,22 @@ _LETTER_DIMENSION = {
     "Z": "Unknown",
 }
 
+# baseDimension determines text field layout (from JS metadata)
+_SS_BASE_DIMENSION = {
+    "01": "Air", "02": "Air", "05": "Air", "06": "Air",
+    "10": "Ground", "11": "Ground", "15": "Ground",
+    "20": "Ground", "25": "Ground", "27": "Ground", "30": "Sea",
+    "35": "Subsurface", "36": "Subsurface",
+    "40": "Ground", "45": "Ground",
+    "50": "Air", "51": "Air", "52": "Ground",
+    "60": "Ground",
+}
+
+# Whether the symbol set represents a "unit" (affects text field mapping)
+_SS_IS_UNIT = {
+    "10": True, "11": True, "27": True, "40": True,
+}
+
 
 def _is_number_sidc(sidc: str) -> bool:
     return sidc.isdigit() and len(sidc) >= 20
@@ -80,14 +97,60 @@ class Symbol:
         self.size = kwargs.get("size", 100)
         self.stroke_width = kwargs.get("stroke_width", 4)
         self.outline_width = kwargs.get("outline_width", 0)
+
+        # Text fields (matching JS option names)
         self.quantity = kwargs.get("quantity", "")
         self.type = kwargs.get("type", "")
-        self.unique_designation = kwargs.get("unique_designation", "")
-        self.staff_comments = kwargs.get("staff_comments", "")
-        self.additional_information = kwargs.get("additional_information", "")
+        self.unique_designation = kwargs.get("unique_designation",
+                                    kwargs.get("uniqueDesignation", ""))
+        self.staff_comments = kwargs.get("staff_comments",
+                                kwargs.get("staffComments", ""))
+        self.additional_information = kwargs.get("additional_information",
+                                        kwargs.get("additionalInformation", ""))
         self.direction = kwargs.get("direction")
         self.dtg = kwargs.get("dtg", "")
         self.location = kwargs.get("location", "")
+        self.speed = kwargs.get("speed", "")
+        self.reinforced_reduced = kwargs.get("reinforced_reduced",
+                                    kwargs.get("reinforcedReduced", ""))
+        self.higher_formation = kwargs.get("higher_formation",
+                                  kwargs.get("higherFormation", ""))
+        self.evaluation_rating = kwargs.get("evaluation_rating",
+                                   kwargs.get("evaluationRating", ""))
+        self.combat_effectiveness = kwargs.get("combat_effectiveness",
+                                      kwargs.get("combatEffectiveness", ""))
+        self.signature_equipment = kwargs.get("signature_equipment",
+                                     kwargs.get("signatureEquipment", ""))
+        self.hostile = kwargs.get("hostile", "")
+        self.iff_sif = kwargs.get("iff_sif", kwargs.get("iffSif", ""))
+        self.sigint = kwargs.get("sigint", "")
+        self.altitude_depth = kwargs.get("altitude_depth",
+                                kwargs.get("altitudeDepth", ""))
+        self.special_headquarters = kwargs.get("special_headquarters",
+                                      kwargs.get("specialHeadquarters", ""))
+        self.country = kwargs.get("country", "")
+        self.platform_type = kwargs.get("platform_type",
+                               kwargs.get("platformType", ""))
+        self.equipment_teardown_time = kwargs.get("equipment_teardown_time",
+                                         kwargs.get("equipmentTeardownTime", ""))
+        self.common_identifier = kwargs.get("common_identifier",
+                                   kwargs.get("commonIdentifier", ""))
+        self.auxiliary_equipment_indicator = kwargs.get("auxiliary_equipment_indicator",
+                                               kwargs.get("auxiliaryEquipmentIndicator", ""))
+        self.headquarters_element = kwargs.get("headquarters_element",
+                                      kwargs.get("headquartersElement", ""))
+        self.installation_composition = kwargs.get("installation_composition",
+                                          kwargs.get("installationComposition", ""))
+        self.guarded_unit = kwargs.get("guarded_unit",
+                              kwargs.get("guardedUnit", ""))
+        self.special_designator = kwargs.get("special_designator",
+                                    kwargs.get("specialDesignator", ""))
+
+        # Style
+        self.font_family = kwargs.get("font_family",
+                              kwargs.get("fontfamily", "Arial"))
+        self.info_size = kwargs.get("info_size", kwargs.get("infoSize", 40))
+        self.info_color = kwargs.get("info_color", kwargs.get("infoColor", ""))
 
         self._number_sidc = _is_number_sidc(self.sidc)
         self._draw_instructions = None
@@ -95,6 +158,9 @@ class Symbol:
         self._valid = None
         self._metadata = {}
         self._svg_cache = None
+        self._composed = False
+        self._final_di = None
+        self._final_bbox = None
         self._resolve()
 
     def _resolve(self):
@@ -106,14 +172,20 @@ class Symbol:
     def _resolve_number(self):
         data = _load_number_data()
         sidc = self.sidc.ljust(20, "0")
+        ss = sidc[4:6]
 
         self._metadata = {
             "version": sidc[0:2],
             "context": sidc[2],
             "affiliation_code": sidc[3],
             "affiliation": _NUMBER_AFFILIATIONS.get(sidc[3], "Unknown"),
-            "symbolset": sidc[4:6],
-            "dimension": _SS_DIMENSION.get(sidc[4:6], "Ground"),
+            "symbolset": ss,
+            "dimension": _SS_DIMENSION.get(ss, "Ground"),
+            "baseDimension": _SS_BASE_DIMENSION.get(ss, "Ground"),
+            "unit": _SS_IS_UNIT.get(ss, False),
+            "dismounted": ss == "27",
+            "activity": ss == "40",
+            "numberSIDC": True,
             "status": sidc[6],
             "hq_tf_fd": sidc[7],
             "echelon": sidc[8:10],
@@ -141,8 +213,13 @@ class Symbol:
             "affiliation": _LETTER_AFFILIATIONS.get(aff_code, "Unknown"),
             "affiliation_code": aff_code,
             "dimension": _LETTER_DIMENSION.get(bd_code, "Ground"),
+            "baseDimension": _LETTER_DIMENSION.get(bd_code, "Ground"),
             "battle_dimension": bd_code,
             "coding_scheme": sidc[0] if len(sidc) > 0 else "",
+            "numberSIDC": False,
+            "unit": False,
+            "dismounted": False,
+            "activity": False,
         }
 
         # Direct lookup
@@ -195,23 +272,92 @@ class Symbol:
     def is_valid(self) -> bool:
         return self._valid is True
 
+    def _compose(self):
+        """Compose final draw instructions and bbox, including text fields."""
+        if self._composed:
+            return
+        self._composed = True
+
+        if not self._draw_instructions or not self._bbox:
+            return
+
+        # Build options dict matching JS field names
+        opts = {
+            "sidc": self.sidc,
+            "quantity": self.quantity,
+            "type": self.type,
+            "uniqueDesignation": self.unique_designation,
+            "staffComments": self.staff_comments,
+            "additionalInformation": self.additional_information,
+            "dtg": self.dtg,
+            "location": self.location,
+            "speed": self.speed,
+            "reinforcedReduced": self.reinforced_reduced,
+            "higherFormation": self.higher_formation,
+            "evaluationRating": self.evaluation_rating,
+            "combatEffectiveness": self.combat_effectiveness,
+            "signatureEquipment": self.signature_equipment,
+            "hostile": self.hostile,
+            "iffSif": self.iff_sif,
+            "altitudeDepth": self.altitude_depth,
+            "specialHeadquarters": self.special_headquarters,
+            "platformType": self.platform_type,
+            "equipmentTeardownTime": self.equipment_teardown_time,
+            "commonIdentifier": self.common_identifier,
+            "auxiliaryEquipmentIndicator": self.auxiliary_equipment_indicator,
+            "headquartersElement": self.headquarters_element,
+            "installationComposition": self.installation_composition,
+            "guardedUnit": self.guarded_unit,
+            "specialDesignator": self.special_designator,
+            "country": self.country,
+        }
+
+        style = {
+            "fontfamily": self.font_family,
+            "info_size": self.info_size,
+            "info_color": self.info_color,
+        }
+
+        text_draw, text_bbox = compute_text_fields(
+            opts, self._metadata, self._bbox, style
+        )
+
+        if text_draw:
+            self._final_di = list(self._draw_instructions) + text_draw
+        else:
+            self._final_di = self._draw_instructions
+
+        if text_bbox:
+            self._final_bbox = {
+                "x1": min(self._bbox["x1"], text_bbox["x1"]),
+                "y1": min(self._bbox["y1"], text_bbox["y1"]),
+                "x2": max(self._bbox["x2"], text_bbox["x2"]),
+                "y2": max(self._bbox["y2"], text_bbox["y2"]),
+            }
+        else:
+            self._final_bbox = self._bbox
+
     def get_anchor(self) -> dict:
-        if not self._bbox:
+        self._compose()
+        bb = self._final_bbox or self._bbox
+        if not bb:
             return {"x": 50, "y": 50}
         sw = float(self.stroke_width)
         ow = float(self.outline_width)
         return {
-            "x": (100 - self._bbox["x1"] + sw + ow) * self.size / 100,
-            "y": (100 - self._bbox["y1"] + sw + ow) * self.size / 100,
+            "x": (100 - bb["x1"] + sw + ow) * self.size / 100,
+            "y": (100 - bb["y1"] + sw + ow) * self.size / 100,
         }
 
     def get_size(self) -> dict:
-        if not self._bbox:
+        self._compose()
+        bb = self._final_bbox or self._bbox
+        if not bb:
             return {"width": 0, "height": 0}
         sw = float(self.stroke_width)
         ow = float(self.outline_width)
-        bw = (self._bbox["x2"] - self._bbox["x1"]) + sw * 2 + ow * 2
-        bh = (self._bbox["y2"] - self._bbox["y1"]) + sw * 2 + ow * 2
+        bw = (bb["x2"] - bb["x1"]) + sw * 2 + ow * 2
+        bh = (bb["y2"] - bb["y1"]) + sw * 2 + ow * 2
         return {
             "width": bw * self.size / 100,
             "height": bh * self.size / 100,
@@ -223,15 +369,18 @@ class Symbol:
     def as_svg(self) -> str:
         if self._svg_cache:
             return self._svg_cache
-        if not self._draw_instructions or not self._bbox:
+        self._compose()
+        di = self._final_di or self._draw_instructions
+        bb = self._final_bbox or self._bbox
+        if not di or not bb:
             return (
                 '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 200 200">'
                 '<text x="100" y="110" text-anchor="middle" font-size="60" fill="red">?</text>'
                 '</svg>'
             )
         self._svg_cache = render_svg(
-            draw_instructions=self._draw_instructions,
-            bbox=self._bbox,
+            draw_instructions=di,
+            bbox=bb,
             stroke_width=self.stroke_width,
             outline_width=self.outline_width,
             size=self.size,

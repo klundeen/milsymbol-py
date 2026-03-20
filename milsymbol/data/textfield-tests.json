@@ -1,0 +1,223 @@
+[
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80,
+      "quantity": "200",
+      "type": "MACHINE GUN",
+      "uniqueDesignation": "3-C",
+      "staffComments": "FOR REINFORCEMENTS",
+      "additionalInformation": "ADDED SUPPORT",
+      "dtg": "301400ZSEP97",
+      "location": "0900000.0E570306.0N"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"959.4666666666666\" height=\"140.8\" viewBox=\"-468.3333333333332 -4 1199.3333333333333 176\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >200</text><text x=\"5\" y=\"40\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >301400ZSEP97</text><text x=\"5\" y=\"80\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >0900000.0E570306.0N</text><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >MACHINE GUN</text><text x=\"5\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >3-C</text><text x=\"195\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >FOR REINFORCEMENTS</text><text x=\"195\" y=\"120\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >ADDED SUPPORT</text></svg>",
+    "anchor": {
+      "x": 454.6666666666666,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 959.4666666666666,
+      "height": 140.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "10031000001211000000",
+    "opts": {
+      "size": 80,
+      "quantity": "50"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"126.4\" viewBox=\"21 -4 158 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >50</text></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 126.4
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SFG-UCA----",
+    "opts": {
+      "size": 80,
+      "type": "M1A2"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"237.3333333333333\" height=\"86.4\" viewBox=\"-117.66666666666663 46 296.66666666666663 108\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M125,80 C150,80 150,120 125,120 L75,120 C50,120 50,80 75,80 Z\" stroke-width=\"3\" stroke=\"black\" fill=\"none\" ></path><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >M1A2</text></svg>",
+    "anchor": {
+      "x": 174.1333333333333,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 237.3333333333333,
+      "height": 86.4
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SHG-UCI----",
+    "opts": {
+      "size": 80,
+      "uniqueDesignation": "1-BN"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"219.7333333333333\" height=\"121.6\" viewBox=\"-98.66666666666666 24 274.66666666666663 152\"><path d=\"M 100,28 L172,100 100,172 28,100 100,28 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,128,128)\" fill-opacity=\"1\" ></path><path d=\"M60,70L140,130M60,130L140,70\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><text x=\"8\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >1-BN</text></svg>",
+    "anchor": {
+      "x": 158.9333333333333,
+      "y": 60.8
+    },
+    "symbolSize": {
+      "width": 219.7333333333333,
+      "height": 121.6
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SUG-UCI----",
+    "opts": {
+      "size": 80,
+      "staffComments": "SPOTTED 0600Z"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"419.06666666666655\" height=\"117.2\" viewBox=\"26.75 26.75 523.8333333333333 146.5\"><path d=\"M63,63 C63,20 137,20 137,63 C180,63 180,137 137,137 C137,180 63,180 63,137 C20,137 20,63 63,63 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,255,128)\" fill-opacity=\"1\" ></path><path d=\"M50,65L150,135M50,135L150,65\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><text x=\"189.25\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >SPOTTED 0600Z</text></svg>",
+    "anchor": {
+      "x": 58.6,
+      "y": 58.6
+    },
+    "symbolSize": {
+      "width": 419.06666666666655,
+      "height": 117.2
+    },
+    "valid": true
+  },
+  {
+    "sidc": "10031500001101000000",
+    "opts": {
+      "size": 80,
+      "uniqueDesignation": "EAGLE01",
+      "type": "F-15E",
+      "speed": "450KTS",
+      "altitudeDepth": "FL350"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"280.53333333333336\" height=\"140.8\" viewBox=\"-186.66666666666669 36 350.6666666666667 176\"><circle cx=\"100\" cy=\"100\" r=\"60\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></circle><g transform=\"translate(0,0)\" ><g transform=\"scale(1)\" ><path d=\"m 100,60 0,80 M 85,75 100,60 115,75\" stroke-width=\"3\" stroke=\"black\" fill=\"none\" ></path></g></g><text x=\"20\" y=\"80\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >FL350</text><text x=\"20\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >F-15E</text><text x=\"20\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >EAGLE01</text><text x=\"20\" y=\"200\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >450KTS</text></svg>",
+    "anchor": {
+      "x": 229.33333333333337,
+      "y": 51.2
+    },
+    "symbolSize": {
+      "width": 280.53333333333336,
+      "height": 140.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "10032000001100000000",
+    "opts": {
+      "size": 80,
+      "uniqueDesignation": "DDG-51",
+      "type": "DESTROYER",
+      "staffComments": "ON STATION"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"605.3333333333333\" height=\"108.8\" viewBox=\"-280.33333333333326 36 756.6666666666665 136\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><text x=\"100\" y=\"103\" text-anchor=\"middle\" font-size=\"39\" font-family=\"Arial\" font-weight=\"bold\" dominant-baseline=\"middle\" stroke-width=\"3\" stroke=\"none\" fill=\"black\" >MIL</text><path d=\"M85,48 85,40 115,40 115,48 100,46 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"black\" ></path><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >DESTROYER</text><text x=\"5\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >DDG-51</text><text x=\"195\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >ON STATION</text></svg>",
+    "anchor": {
+      "x": 304.2666666666666,
+      "y": 51.2
+    },
+    "symbolSize": {
+      "width": 605.3333333333333,
+      "height": 108.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80,
+      "dtg": "301400ZSEP97",
+      "uniqueDesignation": "A CO",
+      "type": "RIFLE",
+      "speed": "5KPH"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"400.5333333333333\" height=\"172.8\" viewBox=\"-321.66666666666663 -4 500.66666666666663 216\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"5\" y=\"40\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >301400ZSEP97</text><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >RIFLE</text><text x=\"5\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >A CO</text><text x=\"5\" y=\"200\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >5KPH</text></svg>",
+    "anchor": {
+      "x": 337.33333333333326,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 400.5333333333333,
+      "height": 172.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80,
+      "reinforcedReduced": "(+)",
+      "staffComments": "EN ROUTE",
+      "additionalInformation": "VIA MSR TAMPA",
+      "higherFormation": "3ID"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"429.3333333333334\" height=\"140.8\" viewBox=\"21 -4 536.6666666666667 176\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"195\" y=\"40\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >(+)</text><text x=\"195\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >EN ROUTE</text><text x=\"195\" y=\"120\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >VIA MSR TAMPA</text><text x=\"195\" y=\"160\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >3ID</text></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 429.3333333333334,
+      "height": 140.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SNA-MFQ----",
+    "opts": {
+      "size": 80,
+      "uniqueDesignation": "VIPER11",
+      "iffSif": "MODE4"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"404.8\" height=\"148.8\" viewBox=\"-167 26 506 186\"><path d=\"M 45,150 L 45,30,155,30,155,150\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(170,255,170)\" fill-opacity=\"1\" ></path><path d=\"m 60,84 40,20 40,-20 0,8 -40,25 -40,-25 z\" stroke-width=\"3\" stroke=\"none\" fill=\"black\" ></path><text x=\"25\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >VIPER11</text><text x=\"175\" y=\"200\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >MODE4</text></svg>",
+    "anchor": {
+      "x": 213.6,
+      "y": 59.2
+    },
+    "symbolSize": {
+      "width": 404.8,
+      "height": 148.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "10031000001211000000",
+    "opts": {
+      "size": 80,
+      "higherFormation": "82ABN"
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"257.6\" height=\"100.8\" viewBox=\"21 46 322 126\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><text x=\"195\" y=\"160\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >82ABN</text></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 257.6,
+      "height": 100.8
+    },
+    "valid": true
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80
+    },
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"108.4\" viewBox=\"21 18.5 158 135.5\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g></svg>",
+    "anchor": {
+      "x": 63.2,
+      "y": 65.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 108.4
+    },
+    "valid": true
+  }
+]

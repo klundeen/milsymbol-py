@@ -197,7 +197,7 @@ node tools/extract_data.mjs ./milsymbol ./milsymbol-py/milsymbol/data
 - [x] Extract test oracle (109K reference symbols)
 - [x] Frozen renderer with exact SVG match
 - [x] Visual comparison playground
-- [ ] Port text field placement (`textfields.js`, 893 lines)
+- [x] Port text field placement (`textfields.js` was 893 lines)
 - [ ] Port echelon / mobility / HQ modifiers for number SIDCs
 - [ ] Comprehensive test fixture (all 5,404 base symbols)
 - [ ] Port composition logic (Phase 2 — real port)
