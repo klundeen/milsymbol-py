@@ -6,34 +6,49 @@ from SIDC metadata fields, not extracted from the data files.
 
 # Echelon code (SIDC pos 8-9) → name
 _ECHELON_CODES = {
-    "11": "Team/Crew", "12": "Squad", "13": "Section",
-    "14": "Platoon/detachment", "15": "Company/battery/troop",
-    "16": "Battalion/squadron", "17": "Regiment/group",
-    "18": "Brigade", "21": "Division", "22": "Corps/MEF",
-    "23": "Army", "24": "Army Group/front", "25": "Region/Theater",
+    "11": "Team/Crew",
+    "12": "Squad",
+    "13": "Section",
+    "14": "Platoon/detachment",
+    "15": "Company/battery/troop",
+    "16": "Battalion/squadron",
+    "17": "Regiment/group",
+    "18": "Brigade",
+    "21": "Division",
+    "22": "Corps/MEF",
+    "23": "Army",
+    "24": "Army Group/front",
+    "25": "Region/Theater",
     "26": "Command",
 }
 
 # Mobility code (SIDC pos 8-9) → name
 _MOBILITY_CODES = {
-    "31": "Wheeled limited cross country", "32": "Wheeled cross country",
-    "33": "Tracked", "34": "Wheeled and tracked combination",
-    "35": "Towed", "36": "Rail", "37": "Pack animals",
-    "41": "Over snow (prime mover)", "42": "Sled",
-    "51": "Barge", "52": "Amphibious",
-    "61": "Short towed array", "62": "Long towed Array",
+    "31": "Wheeled limited cross country",
+    "32": "Wheeled cross country",
+    "33": "Tracked",
+    "34": "Wheeled and tracked combination",
+    "35": "Towed",
+    "36": "Rail",
+    "37": "Pack animals",
+    "41": "Over snow (prime mover)",
+    "42": "Sled",
+    "51": "Barge",
+    "52": "Amphibious",
+    "61": "Short towed array",
+    "62": "Long towed Array",
 }
 
 # HQ/TF/FD code (SIDC pos 7) → flags
 _HQTFFD = {
     "0": (False, False, False),
-    "1": (False, False, True),   # feint/dummy
-    "2": (True,  False, False),  # HQ
-    "3": (True,  False, True),   # HQ + feint/dummy
-    "4": (False, True,  False),  # task force
-    "5": (False, True,  True),   # TF + feint/dummy
-    "6": (True,  True,  False),  # HQ + TF
-    "7": (True,  True,  True),   # HQ + TF + feint/dummy
+    "1": (False, False, True),  # feint/dummy
+    "2": (True, False, False),  # HQ
+    "3": (True, False, True),  # HQ + feint/dummy
+    "4": (False, True, False),  # task force
+    "5": (False, True, True),  # TF + feint/dummy
+    "6": (True, True, False),  # HQ + TF
+    "7": (True, True, True),  # HQ + TF + feint/dummy
 }
 
 
@@ -49,7 +64,7 @@ def parse_modifiers(metadata: dict) -> dict:
     Returns dict with echelon, mobility, headquarters, taskForce,
     feintDummy, installation keys.
     """
-    result = {
+    result: dict[str, object] = {
         "echelon": None,
         "mobility": None,
         "headquarters": False,
@@ -89,8 +104,16 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
         (draw_instructions, modifier_bbox) or ([], None)
     """
     mods = parse_modifiers(metadata)
-    if not any([mods["echelon"], mods["mobility"], mods["headquarters"],
-                mods["taskForce"], mods["feintDummy"], mods["installation"]]):
+    if not any(
+        [
+            mods["echelon"],
+            mods["mobility"],
+            mods["headquarters"],
+            mods["taskForce"],
+            mods["feintDummy"],
+            mods["installation"],
+        ]
+    ):
         return [], None
 
     draw = []
@@ -106,31 +129,47 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
     if mods["headquarters"] and hq_staff_length > 0:
         dim_aff = metadata.get("dimension", "") + metadata.get("affiliation", "")
         y = 100
-        if dim_aff in ("AirFriend", "AirNeutral", "GroundFriend",
-                        "GroundNeutral", "SeaNeutral", "SubsurfaceNeutral"):
+        if dim_aff in (
+            "AirFriend",
+            "AirNeutral",
+            "GroundFriend",
+            "GroundNeutral",
+            "SeaNeutral",
+            "SubsurfaceNeutral",
+        ):
             y = by2
         geom = {
             "type": "path",
             "d": f"M{_n(bx1)},{_n(y)} L{_n(bx1)},{_n(by2 + hq_staff_length)}",
-            "fill": False, "stroke": color, "strokewidth": stroke_width,
+            "fill": False,
+            "stroke": color,
+            "strokewidth": stroke_width,
         }
         draw.append(geom)
         gbbox["y2"] = by2 + hq_staff_length
 
     # ── Task Force ──
     if mods["taskForce"]:
-        width_map = {"Corps/MEF": 110, "Army": 145,
-                     "Army Group/front": 180, "Region/Theater": 215}
+        width_map = {
+            "Corps/MEF": 110,
+            "Army": 145,
+            "Army Group/front": 180,
+            "Region/Theater": 215,
+        }
         w = width_map.get(mods["echelon"], 90)
         geom = {
             "type": "path",
-            "d": (f"M{_n(100 - w/2)},{_n(by1)} L{_n(100 - w/2)},{_n(by1 - 40)} "
-                  f"{_n(100 + w/2)},{_n(by1 - 40)} {_n(100 + w/2)},{_n(by1)}"),
-            "fill": False, "stroke": color, "strokewidth": stroke_width,
+            "d": (
+                f"M{_n(100 - w / 2)},{_n(by1)} L{_n(100 - w / 2)},{_n(by1 - 40)} "
+                f"{_n(100 + w / 2)},{_n(by1 - 40)} {_n(100 + w / 2)},{_n(by1)}"
+            ),
+            "fill": False,
+            "stroke": color,
+            "strokewidth": stroke_width,
         }
         draw.append(geom)
-        gbbox["x1"] = min(gbbox["x1"], bx1, 100 - w/2)
-        gbbox["x2"] = max(gbbox["x2"], bx2, 100 + w/2)
+        gbbox["x1"] = min(gbbox["x1"], bx1, 100 - w / 2)
+        gbbox["x2"] = max(gbbox["x2"], bx2, 100 + w / 2)
         gbbox["y1"] = min(gbbox["y1"], by1 - 40)
 
     # ── Installation ──
@@ -139,17 +178,25 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
         gap = 0
         if dim_aff in ("AirHostile", "GroundHostile", "SeaHostile"):
             gap = 14
-        elif dim_aff in ("AirUnknown", "GroundUnknown", "SeaUnknown",
-                         "AirFriend", "SeaFriend"):
+        elif dim_aff in (
+            "AirUnknown",
+            "GroundUnknown",
+            "SeaUnknown",
+            "AirFriend",
+            "SeaFriend",
+        ):
             gap = 2
         geom = {
             "type": "path",
             "fill": color,
-            "d": (f"M85,{_n(by1 + gap - stroke_width/2)} "
-                  f"85,{_n(by1 - 10)} 115,{_n(by1 - 10)} "
-                  f"115,{_n(by1 + gap - stroke_width/2)} "
-                  f"100,{_n(by1 - stroke_width)} Z"),
-            "stroke": color, "strokewidth": stroke_width,
+            "d": (
+                f"M85,{_n(by1 + gap - stroke_width / 2)} "
+                f"85,{_n(by1 - 10)} 115,{_n(by1 - 10)} "
+                f"115,{_n(by1 + gap - stroke_width / 2)} "
+                f"100,{_n(by1 - stroke_width)} Z"
+            ),
+            "stroke": color,
+            "strokewidth": stroke_width,
         }
         draw.append(geom)
         gbbox["y1"] = min(gbbox["y1"], by1 - 10)
@@ -160,9 +207,10 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
         geom = {
             "type": "path",
             "strokedasharray": "8,8",
-            "d": (f"M100,{_n(top)} L{_n(bx1)},{_n(by1)} "
-                  f"M100,{_n(top)} L{_n(bx2)},{_n(by1)}"),
-            "fill": False, "stroke": color, "strokewidth": stroke_width,
+            "d": (f"M100,{_n(top)} L{_n(bx1)},{_n(by1)} M100,{_n(top)} L{_n(bx2)},{_n(by1)}"),
+            "fill": False,
+            "stroke": color,
+            "strokewidth": stroke_width,
         }
         draw.append(geom)
         gbbox["y1"] = min(gbbox["y1"], top)
@@ -170,15 +218,19 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
     # ── Echelon ──
     inst_pad = 15 if mods["installation"] else 0
     if mods["echelon"]:
-        ec_draw, ec_bbox = _echelon_geometry(
-            mods["echelon"], by1, bx1, bx2, color, inst_pad
-        )
+        ec_draw, ec_bbox = _echelon_geometry(mods["echelon"], by1, bx1, bx2, color, inst_pad)
         if ec_draw:
-            draw.append({
-                "type": "translate", "x": 0, "y": -inst_pad,
-                "draw": ec_draw,
-                "fill": False, "stroke": color, "strokewidth": stroke_width,
-            })
+            draw.append(
+                {
+                    "type": "translate",
+                    "x": 0,
+                    "y": -inst_pad,
+                    "draw": ec_draw,
+                    "fill": False,
+                    "stroke": color,
+                    "strokewidth": stroke_width,
+                }
+            )
             if ec_bbox:
                 for k in ec_bbox:
                     if k in ("x1", "y1"):
@@ -199,15 +251,19 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
             elif mob == "Barge":
                 mob_y2 += 5
 
-        mob_draw, mob_bbox = _mobility_geometry(
-            mods["mobility"], mob_y2, bx1, bx2, color
-        )
+        mob_draw, mob_bbox = _mobility_geometry(mods["mobility"], mob_y2, bx1, bx2, color)
         if mob_draw:
-            draw.append({
-                "type": "translate", "x": 0, "y": mob_y2,
-                "draw": mob_draw,
-                "fill": False, "stroke": color, "strokewidth": stroke_width,
-            })
+            draw.append(
+                {
+                    "type": "translate",
+                    "x": 0,
+                    "y": mob_y2,
+                    "draw": mob_draw,
+                    "fill": False,
+                    "stroke": color,
+                    "strokewidth": stroke_width,
+                }
+            )
             if mob_bbox:
                 for k in mob_bbox:
                     if k in ("x1", "y1"):
@@ -221,12 +277,13 @@ def compute_modifiers(metadata: dict, bbox: dict, style: dict) -> tuple:
     return draw, gbbox
 
 
-def _echelon_geometry(echelon: str, by1: float, bx1: float, bx2: float,
-                      color: str, inst_pad: float) -> tuple:
+def _echelon_geometry(
+    echelon: str, by1: float, bx1: float, bx2: float, color: str, inst_pad: float
+) -> tuple:
     """Generate draw instructions for echelon indicator."""
     y = by1  # top of frame
 
-    defs = {
+    defs: dict[str, dict[str, list[dict] | dict]] = {
         "Team/Crew": {
             "g": [
                 {"type": "circle", "cx": 100, "cy": y - 20, "r": 15},
@@ -277,61 +334,98 @@ def _echelon_geometry(echelon: str, by1: float, bx1: float, bx2: float,
             "bbox": {"y1": y - 40 - inst_pad},
         },
         "Division": {
-            "g": [{"type": "path",
-                   "d": f"M70,{y - 10} l25,-25 m0,25 l-25,-25   M105,{y - 10} l25,-25 m0,25 l-25,-25"}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        f"M70,{y - 10} l25,-25 m0,25 l-25,-25   "
+                        f"M105,{y - 10} l25,-25 m0,25 l-25,-25"
+                    ),
+                }
+            ],
             "bbox": {"y1": y - 40 - inst_pad, "x1": 70, "x2": 130},
         },
         "Corps/MEF": {
-            "g": [{"type": "path",
-                   "d": (f"M52.5,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M87.5,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M122.5,{y - 10} l25,-25 m0,25 l-25,-25")}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        f"M52.5,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M87.5,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M122.5,{y - 10} l25,-25 m0,25 l-25,-25"
+                    ),
+                }
+            ],
             "bbox": {"y1": y - 40 - inst_pad, "x1": 52.5, "x2": 147.5},
         },
         "Army": {
-            "g": [{"type": "path",
-                   "d": (f"M35,{y - 10} l25,-25 m0,25 l-25,-25   "
-                         f"M70,{y - 10} l25,-25 m0,25 l-25,-25   "
-                         f"M105,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M140,{y - 10} l25,-25 m0,25 l-25,-25")}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        f"M35,{y - 10} l25,-25 m0,25 l-25,-25   "
+                        f"M70,{y - 10} l25,-25 m0,25 l-25,-25   "
+                        f"M105,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M140,{y - 10} l25,-25 m0,25 l-25,-25"
+                    ),
+                }
+            ],
             "bbox": {"y1": y - 40 - inst_pad, "x1": 35, "x2": 165},
         },
         "Army Group/front": {
-            "g": [{"type": "path",
-                   "d": (f"M17.5,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M52.5,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M87.5,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M122.5,{y - 10} l25,-25 m0,25 l-25,-25       "
-                         f"M157.5,{y - 10} l25,-25 m0,25 l-25,-25")}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        f"M17.5,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M52.5,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M87.5,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M122.5,{y - 10} l25,-25 m0,25 l-25,-25       "
+                        f"M157.5,{y - 10} l25,-25 m0,25 l-25,-25"
+                    ),
+                }
+            ],
             "bbox": {"y1": y - 40 - inst_pad, "x1": 17.5, "x2": 182.5},
         },
         "Region/Theater": {
-            "g": [{"type": "path",
-                   "d": (f"M0,{y - 10} l25,-25 m0,25 l-25,-25   "
-                         f"M35,{y - 10} l25,-25 m0,25 l-25,-25   "
-                         f"M70,{y - 10} l25,-25 m0,25 l-25,-25   "
-                         f"M105,{y - 10} l25,-25 m0,25 l-25,-25    "
-                         f"M140,{y - 10} l25,-25 m0,25 l-25,-25     "
-                         f"M175,{y - 10} l25,-25 m0,25 l-25,-25")}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        f"M0,{y - 10} l25,-25 m0,25 l-25,-25   "
+                        f"M35,{y - 10} l25,-25 m0,25 l-25,-25   "
+                        f"M70,{y - 10} l25,-25 m0,25 l-25,-25   "
+                        f"M105,{y - 10} l25,-25 m0,25 l-25,-25    "
+                        f"M140,{y - 10} l25,-25 m0,25 l-25,-25     "
+                        f"M175,{y - 10} l25,-25 m0,25 l-25,-25"
+                    ),
+                }
+            ],
             "bbox": {"y1": y - 40 - inst_pad, "x1": 0, "x2": 200},
         },
         "Command": {
-            "g": [{"type": "path",
-                   "d": (f"M70,{y - 22.5} l25,0 m-12.5,12.5 l0,-25   "
-                         f"M105,{y - 22.5} l25,0 m-12.5,12.5 l0,-25")}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        f"M70,{y - 22.5} l25,0 m-12.5,12.5 l0,-25   "
+                        f"M105,{y - 22.5} l25,0 m-12.5,12.5 l0,-25"
+                    ),
+                }
+            ],
             "bbox": {"y1": y - 40 - inst_pad, "x1": 70, "x2": 130},
         },
     }
 
     if echelon not in defs:
         return [], None
-    return defs[echelon]["g"], defs[echelon]["bbox"]
+    entry = defs[echelon]
+    return list(entry["g"]), dict(entry["bbox"])  # type: ignore[arg-type]
 
 
-def _mobility_geometry(mobility: str, by2: float, bx1: float, bx2: float,
-                       color: str) -> tuple:
+def _mobility_geometry(mobility: str, by2: float, bx1: float, bx2: float, color: str) -> tuple:
     """Generate draw instructions for mobility indicator."""
-    defs = {
+    defs: dict[str, dict[str, list[dict] | dict]] = {
         "Wheeled limited cross country": {
             "g": [
                 {"type": "path", "d": "M 53,1 l 94,0"},
@@ -350,13 +444,21 @@ def _mobility_geometry(mobility: str, by2: float, bx1: float, bx2: float,
             "bbox": {"y2": by2 + 16},
         },
         "Tracked": {
-            "g": [{"type": "path", "d": "M 53,1 l 100,0 c15,0 15,15 0,15 l -100,0 c-15,0 -15,-15 0,-15"}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": "M 53,1 l 100,0 c15,0 15,15 0,15 l -100,0 c-15,0 -15,-15 0,-15",
+                }
+            ],
             "bbox": {"y2": by2 + 18, "x1": 42, "x2": 168},
         },
         "Wheeled and tracked combination": {
             "g": [
                 {"type": "circle", "cx": 58, "cy": 8, "r": 8},
-                {"type": "path", "d": "M 83,1 l 70,0 c15,0 15,15 0,15 l -70,0 c-15,0 -15,-15 0,-15"},
+                {
+                    "type": "path",
+                    "d": "M 83,1 l 70,0 c15,0 15,15 0,15 l -70,0 c-15,0 -15,-15 0,-15",
+                },
             ],
             "bbox": {"y2": by2 + 16, "x2": 168},
         },
@@ -383,7 +485,12 @@ def _mobility_geometry(mobility: str, by2: float, bx1: float, bx2: float,
             "bbox": {"y2": by2 + 9},
         },
         "Sled": {
-            "g": [{"type": "path", "d": "M 145,-12  c15,0 15,15 0,15 l -90,0 c-15,0 -15,-15 0,-15"}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": "M 145,-12  c15,0 15,15 0,15 l -90,0 c-15,0 -15,-15 0,-15",
+                }
+            ],
             "bbox": {"y2": by2 + 15, "x1": 42, "x2": 168},
         },
         "Pack animals": {
@@ -395,28 +502,49 @@ def _mobility_geometry(mobility: str, by2: float, bx1: float, bx2: float,
             "bbox": {"y2": by2 + 10},
         },
         "Amphibious": {
-            "g": [{"type": "path",
-                   "d": ("M 65,10 c 0,-10 10,-10 10,0 0,10 10,10 10,0"
-                         "\t0,-10 10,-10 10,0 0,10 10,10 10,0"
-                         "\t0,-10 10,-10 10,0 0,10 10,10 10,0"
-                         "\t0,-10 10,-10 10,0")}],
+            "g": [
+                {
+                    "type": "path",
+                    "d": (
+                        "M 65,10 c 0,-10 10,-10 10,0 0,10 10,10 10,0"
+                        "\t0,-10 10,-10 10,0 0,10 10,10 10,0"
+                        "\t0,-10 10,-10 10,0 0,10 10,10 10,0"
+                        "\t0,-10 10,-10 10,0"
+                    ),
+                }
+            ],
             "bbox": {"y2": by2 + 20},
         },
         "Short towed array": {
-            "g": [{"type": "path", "fill": color,
-                   "d": ("M 50,5 l 100,0 M50,0 l10,0 0,10 -10,0 z "
-                         "M150,0 l-10,0 0,10 10,0 z M100,0 l5,5 -5,5 -5,-5 z")}],
+            "g": [
+                {
+                    "type": "path",
+                    "fill": color,
+                    "d": (
+                        "M 50,5 l 100,0 M50,0 l10,0 0,10 -10,0 z "
+                        "M150,0 l-10,0 0,10 10,0 z M100,0 l5,5 -5,5 -5,-5 z"
+                    ),
+                }
+            ],
             "bbox": {"y2": by2 + 10},
         },
         "Long towed Array": {
-            "g": [{"type": "path", "fill": color,
-                   "d": ("M 50,5 l 100,0 M50,0 l10,0 0,10 -10,0 z "
-                         "M150,0 l-10,0 0,10 10,0 z M105,0 l-10,0 0,10 10,0 z "
-                         "M75,0 l5,5 -5,5 -5,-5 z  M125,0 l5,5 -5,5 -5,-5 z")}],
+            "g": [
+                {
+                    "type": "path",
+                    "fill": color,
+                    "d": (
+                        "M 50,5 l 100,0 M50,0 l10,0 0,10 -10,0 z "
+                        "M150,0 l-10,0 0,10 10,0 z M105,0 l-10,0 0,10 10,0 z "
+                        "M75,0 l5,5 -5,5 -5,-5 z  M125,0 l5,5 -5,5 -5,-5 z"
+                    ),
+                }
+            ],
             "bbox": {"y2": by2 + 10},
         },
     }
 
     if mobility not in defs:
         return [], None
-    return defs[mobility]["g"], defs[mobility]["bbox"]
+    entry = defs[mobility]
+    return list(entry["g"]), dict(entry["bbox"])  # type: ignore[arg-type]

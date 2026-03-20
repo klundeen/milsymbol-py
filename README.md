@@ -32,7 +32,7 @@ symbol icons, each positioned to fit precisely inside affiliation-
 specific frame shapes (rectangle for friendly, diamond for hostile,
 quatrefoil for unknown, etc.). The remaining ~5,000 lines of logic
 compose those icon parts based on a parsed SIDC code and render them
-to SVG or Canvas.
+to SVG.
 
 An LLM (or a mid-level engineer) can translate the 5,000 lines of
 composition logic reasonably well. The problem is the 27,000 lines of
@@ -209,6 +209,38 @@ git clone https://github.com/spatialillusions/milsymbol.git
 cd milsymbol && npm install && npm run build && cd ..
 node tools/extract_data.mjs ./milsymbol ./milsymbol-py/milsymbol/data
 ```
+
+## Development
+
+```bash
+git clone https://github.com/klundeen/milsymbol-py.git
+cd milsymbol-py
+pip install -e ".[dev]"
+
+pytest                                              # 143 tests
+ruff check milsymbol/ tests/ server.py              # lint
+ruff format --check milsymbol/ tests/ server.py     # format check
+mypy milsymbol/ server.py --ignore-missing-imports  # type check
+```
+
+### CI/CD
+
+Every push to `main` and every PR runs:
+- **ruff** lint + format check
+- **mypy** type checking
+- **pytest** across Python 3.10, 3.11, 3.12, 3.13
+
+Creating a GitHub Release triggers automatic publishing to PyPI via
+trusted publishing.
+
+### Publishing to PyPI
+
+> **TODO (Kevin):** Configure trusted publishing on pypi.org:
+> Project → Settings → Publishing → add GitHub publisher with
+> `klundeen/milsymbol-py` and workflow `publish.yml`.
+
+Then: create a GitHub Release tagged `v0.1.0` and the package
+publishes automatically.
 
 ## Known upstream quirks
 

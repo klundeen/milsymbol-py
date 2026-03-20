@@ -8,17 +8,100 @@ varying by dimension (Ground, Air, Sea, Subsurface).
 
 # Character width table for Arial at font-size 30 (from string-width.js)
 _CHAR_WIDTHS = {
-    "0":19,"1":19,"2":19,"3":19,"4":19,"5":19,"6":19,"7":19,"8":19,"9":19,
-    " ":10,"!":10,'"':12,"#":19,"$":19,"%":30,"&":23,"'":7,"(":11,")":11,
-    "*":13,"+":20,",":10,"-":11,".":10,"/":10,":":10,";":10,"<":20,"=":20,
-    ">":20,"?":19,"@":34,"{":12,"|":9,"}":12,"~":20,"[":10,"]":10,"^":16,
-    "_":19,"`":11,
-    "A":23,"B":23,"C":24,"D":24,"E":23,"F":21,"G":26,"H":24,"I":10,"J":17,
-    "K":23,"L":19,"M":28,"N":24,"O":26,"P":23,"Q":26,"R":24,"S":23,"T":21,
-    "U":24,"V":23,"W":32,"X":23,"Y":23,"Z":21,
-    "a":19,"b":19,"c":17,"d":19,"e":19,"f":10,"g":19,"h":19,"i":8,"j":8,
-    "k":17,"l":8,"m":28,"n":19,"o":19,"p":19,"q":19,"r":11,"s":17,"t":10,
-    "u":19,"v":17,"w":24,"x":17,"y":17,"z":17,
+    "0": 19,
+    "1": 19,
+    "2": 19,
+    "3": 19,
+    "4": 19,
+    "5": 19,
+    "6": 19,
+    "7": 19,
+    "8": 19,
+    "9": 19,
+    " ": 10,
+    "!": 10,
+    '"': 12,
+    "#": 19,
+    "$": 19,
+    "%": 30,
+    "&": 23,
+    "'": 7,
+    "(": 11,
+    ")": 11,
+    "*": 13,
+    "+": 20,
+    ",": 10,
+    "-": 11,
+    ".": 10,
+    "/": 10,
+    ":": 10,
+    ";": 10,
+    "<": 20,
+    "=": 20,
+    ">": 20,
+    "?": 19,
+    "@": 34,
+    "{": 12,
+    "|": 9,
+    "}": 12,
+    "~": 20,
+    "[": 10,
+    "]": 10,
+    "^": 16,
+    "_": 19,
+    "`": 11,
+    "A": 23,
+    "B": 23,
+    "C": 24,
+    "D": 24,
+    "E": 23,
+    "F": 21,
+    "G": 26,
+    "H": 24,
+    "I": 10,
+    "J": 17,
+    "K": 23,
+    "L": 19,
+    "M": 28,
+    "N": 24,
+    "O": 26,
+    "P": 23,
+    "Q": 26,
+    "R": 24,
+    "S": 23,
+    "T": 21,
+    "U": 24,
+    "V": 23,
+    "W": 32,
+    "X": 23,
+    "Y": 23,
+    "Z": 21,
+    "a": 19,
+    "b": 19,
+    "c": 17,
+    "d": 19,
+    "e": 19,
+    "f": 10,
+    "g": 19,
+    "h": 19,
+    "i": 8,
+    "j": 8,
+    "k": 17,
+    "l": 8,
+    "m": 28,
+    "n": 19,
+    "o": 19,
+    "p": 19,
+    "q": 19,
+    "r": 11,
+    "s": 17,
+    "t": 10,
+    "u": 19,
+    "v": 17,
+    "w": 24,
+    "x": 17,
+    "y": 17,
+    "z": 17,
 }
 
 
@@ -31,8 +114,7 @@ def str_width(s: str, font_size: float, space_text_icon: float) -> float:
     return w
 
 
-def compute_text_fields(options: dict, metadata: dict, bbox: dict,
-                        style: dict) -> tuple:
+def compute_text_fields(options: dict, metadata: dict, bbox: dict, style: dict) -> tuple:
     """Compute text field draw instructions and expanded bounding box.
 
     Args:
@@ -52,14 +134,32 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
 
     # Check if any text fields are set
     text_field_names = [
-        "quantity", "reinforcedReduced", "staffComments",
-        "additionalInformation", "evaluationRating", "combatEffectiveness",
-        "signatureEquipment", "higherFormation", "hostile", "iffSif",
-        "sigint", "uniqueDesignation", "type", "dtg", "altitudeDepth",
-        "location", "speed", "specialHeadquarters", "platformType",
-        "equipmentTeardownTime", "commonIdentifier",
-        "auxiliaryEquipmentIndicator", "headquartersElement",
-        "installationComposition", "guardedUnit", "specialDesignator",
+        "quantity",
+        "reinforcedReduced",
+        "staffComments",
+        "additionalInformation",
+        "evaluationRating",
+        "combatEffectiveness",
+        "signatureEquipment",
+        "higherFormation",
+        "hostile",
+        "iffSif",
+        "sigint",
+        "uniqueDesignation",
+        "type",
+        "dtg",
+        "altitudeDepth",
+        "location",
+        "speed",
+        "specialHeadquarters",
+        "platformType",
+        "equipmentTeardownTime",
+        "commonIdentifier",
+        "auxiliaryEquipmentIndicator",
+        "headquartersElement",
+        "installationComposition",
+        "guardedUnit",
+        "specialDesignator",
     ]
 
     has_text = any(options.get(f) for f in text_field_names)
@@ -67,23 +167,24 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
         return [], None
 
     draw = []
-    gbbox = {"x1": bbox["x1"], "y1": bbox["y1"],
-             "x2": bbox["x2"], "y2": bbox["y2"]}
+    gbbox = {"x1": bbox["x1"], "y1": bbox["y1"], "x2": bbox["x2"], "y2": bbox["y2"]}
 
     # Quantity above symbol (except dismounted)
     dismounted = metadata.get("dismounted", False)
     if options.get("quantity") and not dismounted:
-        draw.append({
-            "type": "text",
-            "text": options["quantity"],
-            "x": 100,
-            "y": bbox["y1"] - 10,
-            "textanchor": "middle",
-            "fontsize": font_size,
-            "fontfamily": font_family,
-            "fill": font_color,
-            "stroke": False,
-        })
+        draw.append(
+            {
+                "type": "text",
+                "text": options["quantity"],
+                "x": 100,
+                "y": bbox["y1"] - 10,
+                "textanchor": "middle",
+                "fontsize": font_size,
+                "fontfamily": font_family,
+                "fill": font_color,
+                "stroke": False,
+            }
+        )
         gbbox["y1"] = bbox["y1"] - 10 - font_size
 
     # Special headquarters text in center
@@ -95,39 +196,53 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
             _sz = 39
         elif len(sh) >= 4:
             _sz = 33
-        draw.append({
-            "type": "text",
-            "text": sh,
-            "stroke": False,
-            "textanchor": "middle",
-            "alignmentBaseline": "middle",
-            "x": 100,
-            "y": 103,
-            "fontsize": _sz,
-            "fontweight": "bold",
-            "fontfamily": font_family,
-            "fill": font_color,
-        })
+        draw.append(
+            {
+                "type": "text",
+                "text": sh,
+                "stroke": False,
+                "textanchor": "middle",
+                "alignmentBaseline": "middle",
+                "x": 100,
+                "y": 103,
+                "fontsize": _sz,
+                "fontweight": "bold",
+                "fontfamily": font_family,
+                "fill": font_color,
+            }
+        )
 
     # Headquarters element below symbol
     if options.get("headquartersElement"):
-        draw.append({
-            "type": "text",
-            "text": options["headquartersElement"],
-            "x": 100,
-            "y": bbox["y2"] + 35,
-            "textanchor": "middle",
-            "fontsize": 35,
-            "fontfamily": font_family,
-            "fontweight": "bold",
-            "fill": font_color,
-            "stroke": False,
-        })
+        draw.append(
+            {
+                "type": "text",
+                "text": options["headquartersElement"],
+                "x": 100,
+                "y": bbox["y2"] + 35,
+                "textanchor": "middle",
+                "fontsize": 35,
+                "fontfamily": font_family,
+                "fontweight": "bold",
+                "fill": font_color,
+                "stroke": False,
+            }
+        )
         gbbox["y2"] = bbox["y2"] + 35
 
     # Build L1-L5, R1-R5 field mapping based on dimension
-    g = {"L1":"","L2":"","L3":"","L4":"","L5":"",
-         "R1":"","R2":"","R3":"","R4":"","R5":""}
+    g = {
+        "L1": "",
+        "L2": "",
+        "L3": "",
+        "L4": "",
+        "L5": "",
+        "R1": "",
+        "R2": "",
+        "R3": "",
+        "R4": "",
+        "R5": "",
+    }
 
     sidc = options.get("sidc", "")
     is_number = sidc.isdigit() if sidc else False
@@ -143,17 +258,19 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
     elif dismounted:
         # Dismounted individual quantity goes below
         if options.get("quantity"):
-            draw.append({
-                "type": "text",
-                "text": options["quantity"],
-                "x": 100,
-                "y": bbox["y2"] + font_size,
-                "textanchor": "middle",
-                "fontsize": font_size,
-                "fontfamily": font_family,
-                "fill": font_color,
-                "stroke": False,
-            })
+            draw.append(
+                {
+                    "type": "text",
+                    "text": options["quantity"],
+                    "x": 100,
+                    "y": bbox["y2"] + font_size,
+                    "textanchor": "middle",
+                    "fontsize": font_size,
+                    "fontfamily": font_family,
+                    "fill": font_color,
+                    "stroke": False,
+                }
+            )
             gbbox["y2"] = bbox["y2"] + font_size
         _map_dismounted(g, options)
     else:
@@ -165,8 +282,13 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
     flag = 0  # country flag offset (not implemented yet)
 
     gbbox["x1"] = bbox["x1"] - max(
-        _centered_overflow(options.get("specialHeadquarters",""), font_size, space, bbox),
-        _centered_overflow(options.get("quantity","") if not dismounted else "", font_size, space, bbox),
+        _centered_overflow(options.get("specialHeadquarters", ""), font_size, space, bbox),
+        _centered_overflow(
+            options.get("quantity", "") if not dismounted else "",
+            font_size,
+            space,
+            bbox,
+        ),
         str_width(g["L1"], font_size, space),
         str_width(g["L2"], font_size, space),
         str_width(g["L3"], font_size, space),
@@ -175,8 +297,13 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
     )
 
     gbbox["x2"] = bbox["x2"] + max(
-        _centered_overflow(options.get("specialHeadquarters",""), font_size, space, bbox),
-        _centered_overflow(options.get("quantity","") if not dismounted else "", font_size, space, bbox),
+        _centered_overflow(options.get("specialHeadquarters", ""), font_size, space, bbox),
+        _centered_overflow(
+            options.get("quantity", "") if not dismounted else "",
+            font_size,
+            space,
+            bbox,
+        ),
         str_width(g["R1"], font_size, space + stack),
         str_width(g["R2"], font_size, space + stack),
         str_width(g["R3"], font_size, space + stack),
@@ -195,37 +322,41 @@ def compute_text_fields(options: dict, metadata: dict, bbox: dict,
         gbbox["y2"] = max(gbbox["y2"], 100 + 2.7 * font_size)
 
     # Render left fields L1-L5
-    for i, key in enumerate(["L1","L2","L3","L4","L5"]):
+    for i, key in enumerate(["L1", "L2", "L3", "L4", "L5"]):
         if g[key]:
-            draw.append({
-                "type": "text",
-                "text": g[key],
-                "x": bbox["x1"] - space,
-                "y": 100 + (i - 2) * font_size + 0.5 * font_size,
-                "textanchor": "end",
-                "fontsize": font_size,
-                "fontfamily": font_family,
-                "fill": font_color,
-                "stroke": False,
-            })
+            draw.append(
+                {
+                    "type": "text",
+                    "text": g[key],
+                    "x": bbox["x1"] - space,
+                    "y": 100 + (i - 2) * font_size + 0.5 * font_size,
+                    "textanchor": "end",
+                    "fontsize": font_size,
+                    "fontfamily": font_family,
+                    "fill": font_color,
+                    "stroke": False,
+                }
+            )
 
     # Render right fields R1-R5
-    for i, key in enumerate(["R1","R2","R3","R4","R5"]):
+    for i, key in enumerate(["R1", "R2", "R3", "R4", "R5"]):
         if g[key]:
             x_offset = space + stack
             if i >= 3:  # R4, R5 get flag offset
                 x_offset += flag
-            draw.append({
-                "type": "text",
-                "text": g[key],
-                "x": bbox["x2"] + x_offset,
-                "y": 100 + (i - 2) * font_size + 0.5 * font_size,
-                "textanchor": "start",
-                "fontsize": font_size,
-                "fontfamily": font_family,
-                "fill": font_color,
-                "stroke": False,
-            })
+            draw.append(
+                {
+                    "type": "text",
+                    "text": g[key],
+                    "x": bbox["x2"] + x_offset,
+                    "y": 100 + (i - 2) * font_size + 0.5 * font_size,
+                    "textanchor": "start",
+                    "fontsize": font_size,
+                    "fontfamily": font_family,
+                    "fill": font_color,
+                    "stroke": False,
+                }
+            )
 
     return draw, gbbox
 
@@ -246,7 +377,7 @@ def _join_fields(*fields) -> str:
 def _map_ground(g: dict, opts: dict, is_number: bool, is_unit: bool, metadata: dict):
     """Map text fields to L/R positions for Ground dimension."""
     g["L1"] = opts.get("dtg", "")
-    g["L2"] = _join_fields(opts.get("altitudeDepth",""), opts.get("location",""))
+    g["L2"] = _join_fields(opts.get("altitudeDepth", ""), opts.get("location", ""))
     g["L4"] = opts.get("uniqueDesignation", "")
     g["L5"] = opts.get("speed", "")
     g["R2"] = opts.get("staffComments", "")
@@ -254,31 +385,38 @@ def _map_ground(g: dict, opts: dict, is_number: bool, is_unit: bool, metadata: d
 
     # R5: evaluation/combat/signature/hostile/iff
     g["R5"] = _join_fields(
-        opts.get("evaluationRating",""), opts.get("combatEffectiveness",""),
-        opts.get("signatureEquipment",""), opts.get("hostile",""),
-        opts.get("iffSif",""))
+        opts.get("evaluationRating", ""),
+        opts.get("combatEffectiveness", ""),
+        opts.get("signatureEquipment", ""),
+        opts.get("hostile", ""),
+        opts.get("iffSif", ""),
+    )
 
     if not is_number or is_unit:
         # Unit layout
         g["L3"] = _join_fields(
-            opts.get("type",""), opts.get("platformType",""),
-            opts.get("equipmentTeardownTime",""))
+            opts.get("type", ""),
+            opts.get("platformType", ""),
+            opts.get("equipmentTeardownTime", ""),
+        )
         g["R1"] = opts.get("reinforcedReduced", "")
         if metadata.get("activity"):
             g["R1"] = opts.get("country", "")
         g["R3"] = _join_fields(
-            opts.get("additionalInformation",""),
-            opts.get("commonIdentifier",""))
+            opts.get("additionalInformation", ""), opts.get("commonIdentifier", "")
+        )
     else:
         # Equipment/installation layout
         g["L3"] = _join_fields(
-            opts.get("type",""), opts.get("platformType",""),
-            opts.get("commonIdentifier",""),
-            opts.get("installationComposition",""))
+            opts.get("type", ""),
+            opts.get("platformType", ""),
+            opts.get("commonIdentifier", ""),
+            opts.get("installationComposition", ""),
+        )
         g["R1"] = opts.get("country", "")
         g["R3"] = _join_fields(
-            opts.get("additionalInformation",""),
-            opts.get("equipmentTeardownTime",""))
+            opts.get("additionalInformation", ""), opts.get("equipmentTeardownTime", "")
+        )
 
 
 def _map_air(g: dict, opts: dict):
@@ -286,21 +424,18 @@ def _map_air(g: dict, opts: dict):
     g["R1"] = opts.get("uniqueDesignation", "")
     g["R2"] = opts.get("iffSif", "")
     g["R3"] = opts.get("type", "")
-    g["R4"] = _join_fields(opts.get("speed",""), opts.get("altitudeDepth",""))
-    g["R5"] = _join_fields(
-        opts.get("staffComments",""), opts.get("additionalInformation",""))
+    g["R4"] = _join_fields(opts.get("speed", ""), opts.get("altitudeDepth", ""))
+    g["R5"] = _join_fields(opts.get("staffComments", ""), opts.get("additionalInformation", ""))
 
 
 def _map_sea(g: dict, opts: dict):
     """Map text fields to L/R positions for Sea dimension."""
-    g["L1"] = _join_fields(
-        opts.get("guardedUnit",""), opts.get("specialDesignator",""))
+    g["L1"] = _join_fields(opts.get("guardedUnit", ""), opts.get("specialDesignator", ""))
     g["R1"] = opts.get("uniqueDesignation", "")
     g["R2"] = opts.get("type", "")
     g["R3"] = opts.get("iffSif", "")
-    g["R4"] = _join_fields(
-        opts.get("staffComments",""), opts.get("additionalInformation",""))
-    g["R5"] = _join_fields(opts.get("location",""), opts.get("speed",""))
+    g["R4"] = _join_fields(opts.get("staffComments", ""), opts.get("additionalInformation", ""))
+    g["R5"] = _join_fields(opts.get("location", ""), opts.get("speed", ""))
 
 
 def _map_subsurface(g: dict, opts: dict):
@@ -316,17 +451,22 @@ def _map_subsurface(g: dict, opts: dict):
 def _map_dismounted(g: dict, opts: dict):
     """Map text fields for dismounted individual."""
     g["L1"] = opts.get("dtg", "")
-    g["L2"] = _join_fields(opts.get("altitudeDepth",""), opts.get("location",""))
+    g["L2"] = _join_fields(opts.get("altitudeDepth", ""), opts.get("location", ""))
     g["L3"] = _join_fields(
-        opts.get("type",""), opts.get("platformType",""),
-        opts.get("commonIdentifier",""))
+        opts.get("type", ""),
+        opts.get("platformType", ""),
+        opts.get("commonIdentifier", ""),
+    )
     g["L4"] = opts.get("uniqueDesignation", "")
     g["L5"] = opts.get("speed", "")
     g["R1"] = opts.get("country", "")
     g["R2"] = opts.get("staffComments", "")
-    g["R3"] = _join_fields(opts.get("additionalInformation",""))
+    g["R3"] = _join_fields(opts.get("additionalInformation", ""))
     g["R4"] = opts.get("higherFormation", "")
     g["R5"] = _join_fields(
-        opts.get("evaluationRating",""), opts.get("combatEffectiveness",""),
-        opts.get("signatureEquipment",""), opts.get("hostile",""),
-        opts.get("iffSif",""))
+        opts.get("evaluationRating", ""),
+        opts.get("combatEffectiveness", ""),
+        opts.get("signatureEquipment", ""),
+        opts.get("hostile", ""),
+        opts.get("iffSif", ""),
+    )

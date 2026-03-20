@@ -627,6 +627,16 @@ async function fetchPy(sidc, o) {
     if(o.quantity) p.set('quantity',o.quantity);
     if(o.type) p.set('type',o.type);
     if(o.uniqueDesignation) p.set('designation',o.uniqueDesignation);
+    if(o.staffComments) p.set('staffComments',o.staffComments);
+    if(o.additionalInformation) p.set('additionalInformation',o.additionalInformation);
+    if(o.direction) p.set('direction',o.direction);
+    if(o.dtg) p.set('dtg',o.dtg);
+    if(o.speed) p.set('speed',o.speed);
+    if(o.higherFormation) p.set('higherFormation',o.higherFormation);
+    if(o.iffSif) p.set('iffSif',o.iffSif);
+    if(o.altitudeDepth) p.set('altitudeDepth',o.altitudeDepth);
+    if(o.location) p.set('location',o.location);
+    if(o.reinforcedReduced) p.set('reinforcedReduced',o.reinforcedReduced);
     const r = await fetch(`http://localhost:8000/symbol?${p}`,{signal:AbortSignal.timeout(1500)});
     if(r.ok) {
       const d = await r.json();

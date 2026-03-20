@@ -5,13 +5,13 @@ Draw instructions are objects with a 'type' field (path, circle, text, translate
 rotate, scale, clip, svg) and associated properties.
 """
 
-from html import escape as _html_escape
 import re
 
 _ATTR_ESCAPE = str.maketrans({"&": "&amp;", '"': "&quot;", "'": "&apos;", "<": "&lt;", ">": "&gt;"})
 _TEXT_ESCAPE = str.maketrans({"&": "&amp;", "<": "&lt;", ">": "&gt;"})
 _RAW_SVG_BLOCKLIST = re.compile(
-    r"<\s*(script|foreignObject|iframe|object|embed)[\s>]|on[a-z]+\s*=|javascript:", re.I
+    r"<\s*(script|foreignObject|iframe|object|embed)[\s>]|on[a-z]+\s*=|javascript:",
+    re.I,
 )
 _DASHARRAY_RE = re.compile(r"^[0-9.,\s-]+$")
 _FONT_FAMILY_RE = re.compile(r'^[a-zA-Z0-9 ,"\'_:-]+$')
@@ -19,14 +19,24 @@ _FONT_WEIGHT_RE = re.compile(r"^(normal|bold|bolder|lighter|[1-9]00)$")
 _LINECAP_VALUES = {"butt", "round", "square"}
 _TEXT_ANCHOR_VALUES = {"start", "middle", "end"}
 _BASELINE_VALUES = {
-    "auto", "text-bottom", "alphabetic", "ideographic", "middle",
-    "central", "mathematical", "hanging", "text-top",
-    "text-before-edge", "text-after-edge",
+    "auto",
+    "text-bottom",
+    "alphabetic",
+    "ideographic",
+    "middle",
+    "central",
+    "mathematical",
+    "hanging",
+    "text-top",
+    "text-before-edge",
+    "text-after-edge",
 }
 
 
 def _escape_attr(value: str) -> str:
-    return str(value).translate(_ATTR_ESCAPE).replace("\r", " ").replace("\n", " ").replace("\t", " ")
+    return (
+        str(value).translate(_ATTR_ESCAPE).replace("\r", " ").replace("\n", " ").replace("\t", " ")
+    )
 
 
 def _escape_text(value: str) -> str:
@@ -94,7 +104,11 @@ def _sanitize_color(value, fallback="none") -> str:
     s = str(value).strip()
     if not s:
         return fallback
-    if re.search(r"url\s*\(", s, re.I) or re.search(r"javascript:", s, re.I) or s.lower().startswith("data:"):
+    if (
+        re.search(r"url\s*\(", s, re.I)
+        or re.search(r"javascript:", s, re.I)
+        or s.lower().startswith("data:")
+    ):
         return fallback
     return s
 
@@ -146,8 +160,9 @@ def render_instructions(instructions, stroke_width: float = 4, style_fill: bool 
                     if "clipPath" in item and itype != "clip":
                         inline_clip_id = f"clip-inline-{clip_counter[0]}"
                         clip_counter[0] += 1
-                        svg += f'<clipPath{_attr("id", inline_clip_id)}>'
-                        svg += f'<path{_attr("d", item["clipPath"])}{_attr("clip-rule", "nonzero")} />'
+                        svg += f"<clipPath{_attr('id', inline_clip_id)}>"
+                        clip_d = item["clipPath"]
+                        svg += f"<path{_attr('d', clip_d)}{_attr('clip-rule', 'nonzero')} />"
                         svg += "</clipPath>"
 
                     if itype == "path":
@@ -164,13 +179,15 @@ def render_instructions(instructions, stroke_width: float = 4, style_fill: bool 
                         if inline_clip_id:
                             svg += _attr("clip-path", f"url(#{inline_clip_id})")
                     elif itype == "text":
+                        ta = _sanitize_text_anchor(item.get("textanchor")) or "start"
+                        ff = _sanitize_font_family(item.get("fontfamily"))
                         svg += (
                             f"<text"
                             f"{_attr('x', _safe_number(item.get('x')))}"
                             f"{_attr('y', _safe_number(item.get('y')))}"
-                            f"{_attr('text-anchor', _sanitize_text_anchor(item.get('textanchor')) or 'start')}"
+                            f"{_attr('text-anchor', ta)}"
                             f"{_attr('font-size', _safe_number(item.get('fontsize'), 12))}"
-                            f"{_attr('font-family', _sanitize_font_family(item.get('fontfamily')))}"
+                            f"{_attr('font-family', ff)}"
                         )
                         fw = _sanitize_font_weight(item.get("fontweight"))
                         if fw:
@@ -199,10 +216,12 @@ def render_instructions(instructions, stroke_width: float = 4, style_fill: bool 
                         if inline_clip_id:
                             svg += _attr("clip-path", f"url(#{inline_clip_id})")
                     elif itype == "clip":
-                        resolved_id = _sanitize_id(item.get("clipId")) or f"clip-custom-{clip_counter[0]}"
+                        resolved_id = (
+                            _sanitize_id(item.get("clipId")) or f"clip-custom-{clip_counter[0]}"
+                        )
                         clip_counter[0] += 1
-                        svg += f'<clipPath{_attr("id", resolved_id)}>'
-                        svg += f'<path{_attr("d", item.get("d"))}{_attr("clip-rule", "nonzero")} />'
+                        svg += f"<clipPath{_attr('id', resolved_id)}>"
+                        svg += f"<path{_attr('d', item.get('d'))}{_attr('clip-rule', 'nonzero')} />"
                         svg += "</clipPath>"
                         svg += f"<g{_attr('clip-path', f'url(#{resolved_id})')}"
                     else:
@@ -228,7 +247,11 @@ def render_instructions(instructions, stroke_width: float = 4, style_fill: bool 
                             svg += _attr("stroke-linecap", lc)
                             svg += _attr("stroke-linejoin", lc)
 
-                        stroke_color = _sanitize_color(item.get("stroke"), "none") if item.get("stroke") else "none"
+                        stroke_color = (
+                            _sanitize_color(item.get("stroke"), "none")
+                            if item.get("stroke")
+                            else "none"
+                        )
                         svg += _attr("stroke", stroke_color)
 
                     # Fill attributes

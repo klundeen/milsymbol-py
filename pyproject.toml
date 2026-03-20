@@ -28,7 +28,14 @@ keywords = ["military", "symbols", "MIL-STD-2525", "STANAG", "APP-6", "NATO", "s
 
 [project.optional-dependencies]
 server = ["fastapi>=0.100", "uvicorn>=0.20"]
-dev = ["pytest>=7.0", "fastapi>=0.100", "uvicorn>=0.20"]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "httpx>=0.27",
+    "fastapi>=0.100",
+    "uvicorn>=0.20",
+]
 
 [project.urls]
 Homepage = "https://github.com/klundeen/milsymbol-py"
@@ -42,3 +49,13 @@ include = ["milsymbol*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]

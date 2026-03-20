@@ -1,0 +1,279 @@
+[
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80,
+      "quantity": "3"
+    },
+    "name": "Quantity + Company echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"126.4\" viewBox=\"21 -4 158 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >3</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 126.4
+    }
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80,
+      "quantity": "200",
+      "type": "MACHINE GUN",
+      "uniqueDesignation": "3-C",
+      "staffComments": "REINFORCEMENTS"
+    },
+    "name": "Full text + Company echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"753.6\" height=\"140.8\" viewBox=\"-319 -4 942 176\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >200</text><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >MACHINE GUN</text><text x=\"5\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >3-C</text><text x=\"195\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >REINFORCEMENTS</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 335.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 753.6,
+      "height": 140.8
+    }
+  },
+  {
+    "sidc": "SFG-UCI----E",
+    "opts": {
+      "size": 80,
+      "quantity": "50"
+    },
+    "name": "Quantity + Battalion echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"126.4\" viewBox=\"21 -4 158 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><path d=\"M100,40L100,15\" ></path></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >50</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 126.4
+    }
+  },
+  {
+    "sidc": "SFG-UCI----G",
+    "opts": {
+      "size": 80,
+      "uniqueDesignation": "A CO"
+    },
+    "name": "Designation + Brigade echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"230.93333333333328\" height=\"132.8\" viewBox=\"-109.66666666666666 6 288.66666666666663 166\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><path d=\"M100,40L100,15\" ></path><path d=\"M120,40L120,15\" ></path><path d=\"M80,40L80,15\" ></path></g><text x=\"5\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >A CO</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 167.73333333333332,
+      "y": 75.2
+    },
+    "symbolSize": {
+      "width": 230.93333333333328,
+      "height": 132.8
+    }
+  },
+  {
+    "sidc": "10031000151211000000",
+    "opts": {
+      "size": 80,
+      "quantity": "100"
+    },
+    "name": "Num Company + quantity",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"126.4\" viewBox=\"21 -4 158 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><path d=\"M100,40L100,15\" ></path></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >100</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 126.4
+    }
+  },
+  {
+    "sidc": "10031000181211000000",
+    "opts": {
+      "size": 80,
+      "staffComments": "EN ROUTE"
+    },
+    "name": "Num Brigade + staff comments",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"329.06666666666666\" height=\"118.4\" viewBox=\"21 6 411.3333333333333 148\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><path d=\"M87.5,40 l25,-25 m0,25 l-25,-25\" ></path></g><text x=\"195\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >EN ROUTE</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 75.2
+    },
+    "symbolSize": {
+      "width": 329.06666666666666,
+      "height": 118.4
+    }
+  },
+  {
+    "sidc": "10031000331211000000",
+    "opts": {
+      "size": 80,
+      "type": "M2 BRADLEY"
+    },
+    "name": "Num Tracked + type",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"372.8\" height=\"100.8\" viewBox=\"-287 46 466 126\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,150)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><path d=\"M 53,1 l 100,0 c15,0 15,15 0,15 l -100,0 c-15,0 -15,-15 0,-15\" ></path></g><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >M2 BRADLEY</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 309.6,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 372.8,
+      "height": 100.8
+    }
+  },
+  {
+    "sidc": "10030100001101000000",
+    "opts": {
+      "size": 80,
+      "uniqueDesignation": "EAGLE01",
+      "type": "F-15E",
+      "speed": "450KTS",
+      "altitudeDepth": "FL350"
+    },
+    "name": "Air + full text",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"356.79999999999995\" height=\"140.8\" viewBox=\"41 -4 445.99999999999994 176\"><path d=\"M 155,150 C 155,50 115,30 100,30 85,30 45,50 45,150\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M 99.4 80.8 C 97.9 81.1 98.1 83.4 98.1 83.4 L 98 90.7 L 78.6 107.4 L 79.3 109.4 L 98.1 98.3 L 98.3 112.9 L 93.9 116.6 L 93.9 118.7 L 98.8 116.8 C 99.1 117 99.7 117.5 99.7 117.5 C 99.7 117.5 100.4 117 100.7 116.8 L 105.6 118.7 L 105.6 116.6 L 101.1 112.9 L 101.3 98.3 L 120.2 109.4 L 120.9 107.4 L 101.5 90.7 L 101.3 83.4 C 101.3 83.4 101.6 81.1 100 80.8 C 99.8 80.8 99.6 80.8 99.4 80.8 z\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><text x=\"175\" y=\"40\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >EAGLE01</text><text x=\"175\" y=\"120\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >F-15E</text><text x=\"175\" y=\"160\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >450KTS/FL350</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 47.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 356.79999999999995,
+      "height": 140.8
+    }
+  },
+  {
+    "sidc": "SHG-UCI----D",
+    "opts": {
+      "size": 80,
+      "quantity": "2",
+      "uniqueDesignation": "1-BN"
+    },
+    "name": "Hostile Company + text",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"219.7333333333333\" height=\"161.6\" viewBox=\"-98.66666666666666 -26 274.66666666666663 202\"><path d=\"M 100,28 L172,100 100,172 28,100 100,28 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,128,128)\" fill-opacity=\"1\" ></path><path d=\"M60,70L140,130M60,130L140,70\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"8\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"8\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"8\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"100\" y=\"18\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >2</text><text x=\"8\" y=\"160\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >1-BN</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 158.9333333333333,
+      "y": 100.8
+    },
+    "symbolSize": {
+      "width": 219.7333333333333,
+      "height": 161.6
+    }
+  },
+  {
+    "sidc": "SUG-UCI----D",
+    "opts": {
+      "size": 80,
+      "staffComments": "SPOTTED 0600Z"
+    },
+    "name": "Unknown Company + staff",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"419.06666666666655\" height=\"139.2\" viewBox=\"26.75 -0.75 523.8333333333333 174\"><path d=\"M63,63 C63,20 137,20 137,63 C180,63 180,137 137,137 C137,180 63,180 63,137 C20,137 20,63 63,63 Z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(255,255,128)\" fill-opacity=\"1\" ></path><path d=\"M50,65L150,135M50,135L150,65\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"10.75\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"10.75\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"10.75\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"189.25\" y=\"80\" text-anchor=\"start\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >SPOTTED 0600Z</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 58.6,
+      "y": 80.6
+    },
+    "symbolSize": {
+      "width": 419.06666666666655,
+      "height": 139.2
+    }
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 80
+    },
+    "name": "Echelon only, no text",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"108.4\" viewBox=\"21 18.5 158 135.5\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 65.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 108.4
+    }
+  },
+  {
+    "sidc": "SFG-UCI----",
+    "opts": {
+      "size": 80,
+      "quantity": "50"
+    },
+    "name": "Quantity only, no echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"126.4\" viewBox=\"21 -4 158 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >50</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 83.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 126.4
+    }
+  },
+  {
+    "sidc": "10031000001211000000",
+    "opts": {
+      "size": 80
+    },
+    "name": "Plain number, no mods",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"126.4\" height=\"86.4\" viewBox=\"21 46 158 108\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 63.2,
+      "y": 43.2
+    },
+    "symbolSize": {
+      "width": 126.4,
+      "height": 86.4
+    }
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 40,
+      "quantity": "3",
+      "type": "MG"
+    },
+    "name": "Small size + text + echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"100\" height=\"63.2\" viewBox=\"-71 -4 250 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >3</text><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >MG</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 68.4,
+      "y": 41.6
+    },
+    "symbolSize": {
+      "width": 100,
+      "height": 63.2
+    }
+  },
+  {
+    "sidc": "SFG-UCI----D",
+    "opts": {
+      "size": 120,
+      "quantity": "3",
+      "type": "MG"
+    },
+    "name": "Large size + text + echelon",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" baseProfile=\"tiny\" width=\"300\" height=\"189.6\" viewBox=\"-71 -4 250 158\"><path d=\"M25,50 l150,0 0,100 -150,0 z\" stroke-width=\"4\" stroke=\"black\" fill=\"rgb(128,224,255)\" fill-opacity=\"1\" ></path><path d=\"M25,50 L175,150 M25,150 L175,50\" stroke-width=\"3\" stroke=\"black\" fill=\"black\" ></path><g transform=\"translate(0,0)\" stroke-width=\"4\" stroke=\"black\" fill=\"none\" ><circle cx=\"100\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"70\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle><circle cx=\"130\" cy=\"30\" r=\"7.5\" fill=\"black\" ></circle></g><text x=\"100\" y=\"40\" text-anchor=\"middle\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >3</text><text x=\"5\" y=\"120\" text-anchor=\"end\" font-size=\"40\" font-family=\"Arial\" stroke-width=\"4\" stroke=\"none\" fill=\"black\" >MG</text></svg>",
+    "valid": true,
+    "anchor": {
+      "x": 205.2,
+      "y": 124.8
+    },
+    "symbolSize": {
+      "width": 300,
+      "height": 189.6
+    }
+  }
+]

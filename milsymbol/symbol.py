@@ -9,11 +9,18 @@ import json
 from pathlib import Path
 from typing import Optional
 
+from .modifiers import compute_modifiers
 from .renderer import render_svg
 from .textfields import compute_text_fields
-from .modifiers import compute_modifiers, parse_modifiers
 
 _DATA_DIR = Path(__file__).parent / "data"
+
+_PLACEHOLDER_SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"'
+    ' viewBox="0 0 200 200">'
+    '<text x="100" y="110" text-anchor="middle" font-size="60"'
+    ' fill="red">?</text></svg>'
+)
 
 _number_data: Optional[dict] = None
 _letter_data: Optional[dict] = None
@@ -45,67 +52,124 @@ def _load_geometries() -> dict:
 
 
 _NUMBER_AFFILIATIONS = {
-    "0": "Pending", "1": "Unknown", "2": "AssumedFriend",
-    "3": "Friend", "4": "Neutral", "5": "Suspect", "6": "Hostile",
+    "0": "Pending",
+    "1": "Unknown",
+    "2": "AssumedFriend",
+    "3": "Friend",
+    "4": "Neutral",
+    "5": "Suspect",
+    "6": "Hostile",
 }
 
 _LETTER_AFFILIATIONS = {
-    "P": "Pending", "U": "Unknown", "A": "AssumedFriend",
-    "F": "Friend", "N": "Neutral", "S": "Suspect", "H": "Hostile",
-    "G": "Friend", "W": "Unknown", "D": "Friend",
-    "L": "Hostile", "M": "AssumedFriend", "J": "Friend", "K": "Friend",
+    "P": "Pending",
+    "U": "Unknown",
+    "A": "AssumedFriend",
+    "F": "Friend",
+    "N": "Neutral",
+    "S": "Suspect",
+    "H": "Hostile",
+    "G": "Friend",
+    "W": "Unknown",
+    "D": "Friend",
+    "L": "Hostile",
+    "M": "AssumedFriend",
+    "J": "Friend",
+    "K": "Friend",
 }
 
 _SS_DIMENSION = {
-    "01": "Air", "02": "Air", "05": "Air", "06": "Air",
-    "10": "Ground", "11": "Ground", "15": "Ground",
-    "20": "Sea", "25": "Ground", "27": "Ground", "30": "Ground",
-    "35": "Subsurface", "36": "Subsurface",
-    "40": "Ground", "45": "Ground",
-    "50": "Air", "51": "Air", "52": "Air",
+    "01": "Air",
+    "02": "Air",
+    "05": "Air",
+    "06": "Air",
+    "10": "Ground",
+    "11": "Ground",
+    "15": "Ground",
+    "20": "Sea",
+    "25": "Ground",
+    "27": "Ground",
+    "30": "Ground",
+    "35": "Subsurface",
+    "36": "Subsurface",
+    "40": "Ground",
+    "45": "Ground",
+    "50": "Air",
+    "51": "Air",
+    "52": "Air",
     "60": "Ground",
 }
 
 _LETTER_DIMENSION = {
-    "P": "Air", "A": "Air",
-    "G": "Ground", "U": "Ground",
-    "S": "Sea", "F": "Sea",
+    "P": "Air",
+    "A": "Air",
+    "G": "Ground",
+    "U": "Ground",
+    "S": "Sea",
+    "F": "Sea",
     "Z": "Unknown",
 }
 
 # baseDimension determines text field layout (from JS metadata)
 _SS_BASE_DIMENSION = {
-    "01": "Air", "02": "Air", "05": "Air", "06": "Air",
-    "10": "Ground", "11": "Ground", "15": "Ground",
-    "20": "Ground", "25": "Ground", "27": "Ground", "30": "Sea",
-    "35": "Subsurface", "36": "Subsurface",
-    "40": "Ground", "45": "Ground",
-    "50": "Air", "51": "Air", "52": "Ground",
+    "01": "Air",
+    "02": "Air",
+    "05": "Air",
+    "06": "Air",
+    "10": "Ground",
+    "11": "Ground",
+    "15": "Ground",
+    "20": "Ground",
+    "25": "Ground",
+    "27": "Ground",
+    "30": "Sea",
+    "35": "Subsurface",
+    "36": "Subsurface",
+    "40": "Ground",
+    "45": "Ground",
+    "50": "Air",
+    "51": "Air",
+    "52": "Ground",
     "60": "Ground",
 }
 
 # Whether the symbol set represents a "unit" (affects text field mapping)
 _SS_IS_UNIT = {
-    "10": True, "11": True, "27": True, "40": True,
+    "10": True,
+    "11": True,
+    "27": True,
+    "40": True,
 }
 
 # Map (dimension, affiliation) → geometry key for frame bbox lookup
 _FRAME_GEO_MAP = {
-    ("Ground", "Friend"): "GroundFriend", ("Ground", "Hostile"): "GroundHostile",
-    ("Ground", "Neutral"): "GroundNeutral", ("Ground", "Unknown"): "GroundUnknown",
-    ("Ground", "AssumedFriend"): "GroundFriend", ("Ground", "Suspect"): "GroundHostile",
+    ("Ground", "Friend"): "GroundFriend",
+    ("Ground", "Hostile"): "GroundHostile",
+    ("Ground", "Neutral"): "GroundNeutral",
+    ("Ground", "Unknown"): "GroundUnknown",
+    ("Ground", "AssumedFriend"): "GroundFriend",
+    ("Ground", "Suspect"): "GroundHostile",
     ("Ground", "Pending"): "GroundUnknown",
-    ("Air", "Friend"): "AirFriend", ("Air", "Hostile"): "AirHostile",
-    ("Air", "Neutral"): "AirNeutral", ("Air", "Unknown"): "AirUnknown",
-    ("Air", "AssumedFriend"): "AirFriend", ("Air", "Suspect"): "AirHostile",
+    ("Air", "Friend"): "AirFriend",
+    ("Air", "Hostile"): "AirHostile",
+    ("Air", "Neutral"): "AirNeutral",
+    ("Air", "Unknown"): "AirUnknown",
+    ("Air", "AssumedFriend"): "AirFriend",
+    ("Air", "Suspect"): "AirHostile",
     ("Air", "Pending"): "AirUnknown",
-    ("Sea", "Friend"): "SeaFriend", ("Sea", "Hostile"): "SeaHostile",
-    ("Sea", "Neutral"): "SeaNeutral", ("Sea", "Unknown"): "SeaUnknown",
-    ("Sea", "AssumedFriend"): "SeaFriend", ("Sea", "Suspect"): "SeaHostile",
+    ("Sea", "Friend"): "SeaFriend",
+    ("Sea", "Hostile"): "SeaHostile",
+    ("Sea", "Neutral"): "SeaNeutral",
+    ("Sea", "Unknown"): "SeaUnknown",
+    ("Sea", "AssumedFriend"): "SeaFriend",
+    ("Sea", "Suspect"): "SeaHostile",
     ("Sea", "Pending"): "SeaUnknown",
-    ("Subsurface", "Friend"): "SubsurfaceFriend", ("Subsurface", "Hostile"): "SubsurfaceHostile",
-    ("Subsurface", "Neutral"): "SubsurfaceNeutral", ("Subsurface", "Unknown"): "SubsurfaceUnknown",
-    ("Subsurface", "AssumedFriend"): "SubsurfaceFriend", ("Subsurface", "Suspect"): "SubsurfaceHostile",
+    ("Subsurface", "Friend"): "SubsurfaceFriend",
+    ("Subsurface", "Hostile"): "SubsurfaceHostile",
+    ("Subsurface", "Neutral"): "SubsurfaceNeutral",
+    ("Subsurface", "Unknown"): "SubsurfaceUnknown",
+    ("Subsurface", "AssumedFriend"): "SubsurfaceFriend",
+    ("Subsurface", "Suspect"): "SubsurfaceHostile",
     ("Subsurface", "Pending"): "SubsurfaceUnknown",
 }
 
@@ -131,63 +195,67 @@ class Symbol:
         # Text fields (matching JS option names)
         self.quantity = kwargs.get("quantity", "")
         self.type = kwargs.get("type", "")
-        self.unique_designation = kwargs.get("unique_designation",
-                                    kwargs.get("uniqueDesignation", ""))
-        self.staff_comments = kwargs.get("staff_comments",
-                                kwargs.get("staffComments", ""))
-        self.additional_information = kwargs.get("additional_information",
-                                        kwargs.get("additionalInformation", ""))
+        self.unique_designation = kwargs.get(
+            "unique_designation", kwargs.get("uniqueDesignation", "")
+        )
+        self.staff_comments = kwargs.get("staff_comments", kwargs.get("staffComments", ""))
+        self.additional_information = kwargs.get(
+            "additional_information", kwargs.get("additionalInformation", "")
+        )
         self.direction = kwargs.get("direction")
         self.dtg = kwargs.get("dtg", "")
         self.location = kwargs.get("location", "")
         self.speed = kwargs.get("speed", "")
-        self.reinforced_reduced = kwargs.get("reinforced_reduced",
-                                    kwargs.get("reinforcedReduced", ""))
-        self.higher_formation = kwargs.get("higher_formation",
-                                  kwargs.get("higherFormation", ""))
-        self.evaluation_rating = kwargs.get("evaluation_rating",
-                                   kwargs.get("evaluationRating", ""))
-        self.combat_effectiveness = kwargs.get("combat_effectiveness",
-                                      kwargs.get("combatEffectiveness", ""))
-        self.signature_equipment = kwargs.get("signature_equipment",
-                                     kwargs.get("signatureEquipment", ""))
+        self.reinforced_reduced = kwargs.get(
+            "reinforced_reduced", kwargs.get("reinforcedReduced", "")
+        )
+        self.higher_formation = kwargs.get("higher_formation", kwargs.get("higherFormation", ""))
+        self.evaluation_rating = kwargs.get("evaluation_rating", kwargs.get("evaluationRating", ""))
+        self.combat_effectiveness = kwargs.get(
+            "combat_effectiveness", kwargs.get("combatEffectiveness", "")
+        )
+        self.signature_equipment = kwargs.get(
+            "signature_equipment", kwargs.get("signatureEquipment", "")
+        )
         self.hostile = kwargs.get("hostile", "")
         self.iff_sif = kwargs.get("iff_sif", kwargs.get("iffSif", ""))
         self.sigint = kwargs.get("sigint", "")
-        self.altitude_depth = kwargs.get("altitude_depth",
-                                kwargs.get("altitudeDepth", ""))
-        self.special_headquarters = kwargs.get("special_headquarters",
-                                      kwargs.get("specialHeadquarters", ""))
+        self.altitude_depth = kwargs.get("altitude_depth", kwargs.get("altitudeDepth", ""))
+        self.special_headquarters = kwargs.get(
+            "special_headquarters", kwargs.get("specialHeadquarters", "")
+        )
         self.country = kwargs.get("country", "")
-        self.platform_type = kwargs.get("platform_type",
-                               kwargs.get("platformType", ""))
-        self.equipment_teardown_time = kwargs.get("equipment_teardown_time",
-                                         kwargs.get("equipmentTeardownTime", ""))
-        self.common_identifier = kwargs.get("common_identifier",
-                                   kwargs.get("commonIdentifier", ""))
-        self.auxiliary_equipment_indicator = kwargs.get("auxiliary_equipment_indicator",
-                                               kwargs.get("auxiliaryEquipmentIndicator", ""))
-        self.headquarters_element = kwargs.get("headquarters_element",
-                                      kwargs.get("headquartersElement", ""))
-        self.installation_composition = kwargs.get("installation_composition",
-                                          kwargs.get("installationComposition", ""))
-        self.guarded_unit = kwargs.get("guarded_unit",
-                              kwargs.get("guardedUnit", ""))
-        self.special_designator = kwargs.get("special_designator",
-                                    kwargs.get("specialDesignator", ""))
+        self.platform_type = kwargs.get("platform_type", kwargs.get("platformType", ""))
+        self.equipment_teardown_time = kwargs.get(
+            "equipment_teardown_time", kwargs.get("equipmentTeardownTime", "")
+        )
+        self.common_identifier = kwargs.get("common_identifier", kwargs.get("commonIdentifier", ""))
+        self.auxiliary_equipment_indicator = kwargs.get(
+            "auxiliary_equipment_indicator",
+            kwargs.get("auxiliaryEquipmentIndicator", ""),
+        )
+        self.headquarters_element = kwargs.get(
+            "headquarters_element", kwargs.get("headquartersElement", "")
+        )
+        self.installation_composition = kwargs.get(
+            "installation_composition", kwargs.get("installationComposition", "")
+        )
+        self.guarded_unit = kwargs.get("guarded_unit", kwargs.get("guardedUnit", ""))
+        self.special_designator = kwargs.get(
+            "special_designator", kwargs.get("specialDesignator", "")
+        )
 
         # Style
-        self.font_family = kwargs.get("font_family",
-                              kwargs.get("fontfamily", "Arial"))
+        self.font_family = kwargs.get("font_family", kwargs.get("fontfamily", "Arial"))
         self.info_size = kwargs.get("info_size", kwargs.get("infoSize", 40))
         self.info_color = kwargs.get("info_color", kwargs.get("infoColor", ""))
 
         self._number_sidc = _is_number_sidc(self.sidc)
         self._draw_instructions = None
-        self._bbox = None
-        self._valid = None
-        self._metadata = {}
-        self._svg_cache = None
+        self._bbox: dict | None = None
+        self._valid: bool | None = None
+        self._metadata: dict[str, object] = {}
+        self._svg_cache: str | None = None
         self._composed = False
         self._final_di = None
         self._final_bbox = None
@@ -314,12 +382,12 @@ class Symbol:
         """Get the frame geometry bbox (without echelon/modifier expansion)."""
         dim = self._metadata.get("dimension", "Ground")
         aff = self._metadata.get("affiliation", "Unknown")
-        geo_key = _FRAME_GEO_MAP.get((dim, aff))
+        geo_key = _FRAME_GEO_MAP.get((dim, aff))  # type: ignore[arg-type]
         if geo_key:
             geos = _load_geometries()
             if geo_key in geos:
                 return geos[geo_key]["bbox"]
-        return self._bbox
+        return self._bbox or {"x1": 50, "y1": 50, "x2": 150, "y2": 150}
 
     def _compose(self):
         """Compose final draw instructions and bbox, including modifiers and text fields."""
@@ -376,9 +444,7 @@ class Symbol:
             "stroke_width": self.stroke_width,
             "hq_staff_length": style.get("hq_staff_length", 0),
         }
-        mod_draw, mod_bbox = compute_modifiers(
-            self._metadata, self._get_frame_bbox(), mod_style
-        )
+        mod_draw, mod_bbox = compute_modifiers(self._metadata, self._get_frame_bbox(), mod_style)
 
         # Merge: base draw instructions + modifiers + text fields
         self._final_di = list(self._draw_instructions)
@@ -407,7 +473,12 @@ class Symbol:
         ow = float(self.outline_width)
 
         # HQ symbols: anchor at base of HQ staff line
-        if self._metadata.get("numberSIDC") and self._metadata.get("hq_tf_fd") in ("2", "3", "6", "7"):
+        if self._metadata.get("numberSIDC") and self._metadata.get("hq_tf_fd") in (
+            "2",
+            "3",
+            "6",
+            "7",
+        ):
             frame_bb = self._get_frame_bbox()
             hq_staff = 100  # default HQ staff length
             ax = frame_bb["x1"]
@@ -446,11 +517,7 @@ class Symbol:
         di = self._final_di or self._draw_instructions
         bb = self._final_bbox or self._bbox
         if not di or not bb:
-            return (
-                '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 200 200">'
-                '<text x="100" y="110" text-anchor="middle" font-size="60" fill="red">?</text>'
-                '</svg>'
-            )
+            return _PLACEHOLDER_SVG
         self._svg_cache = render_svg(
             draw_instructions=di,
             bbox=bb,
