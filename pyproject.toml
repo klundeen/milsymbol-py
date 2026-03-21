@@ -48,6 +48,7 @@ include = ["milsymbol*"]
 "milsymbol.data" = [
     "number-data.json.gz",
     "letter-data.json.gz",
+    "modifier-data.json.gz",
     "colormodes.json",
     "dasharrays.json",
     "geometries.json",
