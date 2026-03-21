@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "milsymbol"
-version = "0.1.0"
+version = "0.2.0"
 description = "Military symbols (MIL-STD-2525 / STANAG APP-6) in Python — port of milsymbol.js"
 readme = "README.md"
 license = {text = "MIT"}

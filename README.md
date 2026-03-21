@@ -138,8 +138,8 @@ Or from source:
 ```bash
 git clone https://github.com/klundeen/milsymbol-py.git
 cd milsymbol-py
-pip install -e ".[dev]"
-pytest
+uv sync --extra dev
+uv run pytest
 ```
 
 ## API
@@ -271,13 +271,13 @@ PR when the upstream version changes.
 ```bash
 git clone https://github.com/klundeen/milsymbol-py.git
 cd milsymbol-py
-pip install -e ".[dev]"
+uv sync --extra dev
 
-pytest                                              # 184 fast tests
-pytest -m slow                                      # + 403 corpus tests
-ruff check milsymbol/ tests/ server.py              # lint
-ruff format --check milsymbol/ tests/ server.py     # format check
-mypy milsymbol/ server.py --ignore-missing-imports  # type check
+uv run pytest                                              # 184 fast tests
+uv run pytest -m slow                                      # + 403 corpus tests
+uv run ruff check milsymbol/ tests/ server.py              # lint
+uv run ruff format --check milsymbol/ tests/ server.py     # format check
+uv run mypy milsymbol/ server.py --ignore-missing-imports  # type check
 ```
 
 ### CI/CD
@@ -324,6 +324,8 @@ reproduce without porting the full JS runtime cache semantics.
 To see the difference, enter `10031500001201000107` in the
 playground and compare the two small circles at the bottom — the
 JS version renders them with slightly thicker strokes.
+
+![JS vs Python for SIDC 10031500001201000107](docs/mismatch-tank-m2-07.png)
 
 | Scenario | JS stroke-width | Python stroke-width |
 |---|---|---|
@@ -494,8 +496,9 @@ work" and Kevin optimizes for "is it right."
 
 ### Session 3: And you still need a domain expert (~3 hours)
 
-A week after publishing v0.1.0, Kevin was reading the milsymbol
-JS source for an unrelated reason and noticed something alarming:
+Mere hours after publishing v0.1.0, Kevin was reading the milsymbol
+JS source for an unrelated reason (guess he _did_ read some code after all) 
+and noticed something alarming:
 a block of code that conditionally scaled weapon icons for
 dismounted individuals based on whether modifier codes were
 present. The modifier codes occupy SIDC positions 17-20 — and the
@@ -525,15 +528,20 @@ modifies shared icon-part objects in place — an upstream
 peculiarity that makes exact SVG matching for 25 specific symbols
 impractical without porting the full JS runtime cache.
 
-The session reinforced the pattern from before: Claude does the
-volume work, Kevin catches the structural problems. But this time
-the structural problem wasn't in Claude's code — it was in the
-extraction strategy Claude designed in Session 1. The "run every
-valid input" approach was sound, but "every valid input" turned
-out to be a smaller set than "every input a real user would
-provide." You need someone who knows what a real user would
-provide.
-
+The session reinforced the pattern from before: Claude does the volume 
+work, Kevin catches the structural problems. But this time the 
+structural problem wasn't in Claude's code — it was in the extraction 
+strategy Claude designed in Session 1. The "run every valid input" 
+approach was sound, but the extraction had a blind spot about what 
+constitutes a valid input. It enumerated every base entity across 
+all affiliations — 37,828 of them — but treated SIDC positions 
+17-20 as always zero. The actual input space is every entity × every 
+m1 code × every m2 code × every affiliation: roughly 68 million 
+combinations. The 100% corpus match was real and impressive and 
+completely missed the problem. You need someone who knows what a 
+real SIDC looks like to notice that four digits were being silently 
+ignored — and who knows what other domain assumptions are baked 
+into the extraction that neither of us has thought to question yet.
 ### The recursion
 
 This retrospective was also written by Claude, at Kevin's request,
