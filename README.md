@@ -107,19 +107,21 @@ comes later — and when it does, we already have the full test corpus.
 
 ### A note on process
 
-This project was built entirely through 5-hour conversation between Kevin
-Lundeen (a computer science professor at Seattle University) and
-Claude Opus 4.6. Kevin directed the architecture, asked the right
-questions, and pressure-tested the approach — but never read the
-milsymbol JS source code or the generated Python code directly.
-Claude analyzed the 33,000-line codebase, devised the extraction
-strategy, wrote the tooling, ported the renderer, and built the
-test harness. The project is a demonstration of what's possible
-when a senior engineer uses an LLM as a tool: the human provides
-judgment and direction, the machine provides the throughput and
-detail work. The comment that inspired this project observed that
-LLMs fail at tasks like porting JS libraries to Python. We didn't
-port the library — we found a way around the problem entirely.
+This project was built in two sessions over a single afternoon (~7
+hours) through conversation between Kevin Lundeen (a CS professor
+at Seattle University) and Claude Opus 4.6. Kevin never read the
+milsymbol JS source or the generated Python — he directed entirely
+through architecture questions, visual inspection of playground
+output, and quality standards. Claude read the 33,000-line
+codebase, devised the extraction strategy, wrote all the code, and
+built the test infrastructure.
+
+The comment that inspired this project observed that LLMs fail at
+tasks like porting JS libraries to Python. We didn't port the
+library — we found a way around the problem entirely.
+
+See [How this was built](#how-this-was-built) at the end of this
+README for a detailed retrospective.
 
 ---
 
@@ -321,3 +323,130 @@ MIT — same as the original
   Måns Beckman — the original JS library.
 - Symbol geometry and icon data derived from MIL-STD-2525 and STANAG
   APP-6.
+- **Stephen Riley** (Seattle University, CS) — whose offhand comment
+  that LLMs can't port JS libraries to Python started this whole thing.
+
+---
+
+## How this was built
+
+*Written by Claude Opus 4.6, at Kevin's request, about the
+conversation that produced this project. Kevin reviewed it for
+accuracy but did not edit the substance.*
+
+### The challenge
+
+Stephen Riley shared a comment observing that LLMs fail at
+"straightforward" tasks like porting JavaScript libraries to Python.
+Kevin Lundeen showed it to Claude and asked: "Could you do it?"
+Claude hedged honestly. Kevin said: "Can you take a look at that
+library?" — pointing at milsymbol's 33,000 lines of JS.
+
+### Session 1: Architecture and extraction (~3 hours)
+
+The entire project pivoted on one question Kevin asked early:
+**"Can't the data be extracted independently?"** Claude had been
+thinking about translation — reading JS and writing equivalent
+Python. Kevin saw extraction — running the JS once, capturing every
+possible output, and writing a thin Python renderer against the
+captured data. That reframing made the project feasible in an
+afternoon instead of weeks.
+
+Kevin drove the discovery through short, precise questions:
+
+- "What's the library API in a nutshell?" — forced understanding
+  the surface area before diving in.
+- "Are there good tests? Could you generate a big set of tests?" —
+  thinking about verification before a line of code existed.
+- "How long would it take and how big would it be?" — engineering
+  scoping, not excitement.
+- "Build me a web page where I can look at the symbols" — insisted
+  on visual verification before trusting automated tests.
+- "Would the testing strategy leave any room for missed coverage,
+  logically?" — probing for holes in the approach before committing.
+
+Then he said "go." Claude built the extraction tools, renderer,
+data pipeline, FastAPI server, playground, smoke tests, and GitHub
+project structure. Kevin reviewed output visually, caught the
+invisible-text-on-dark-background problem in the playground,
+noticed the quantity/echelon collision in the JS library itself,
+and directed the README framing — insisting on the honest "test
+harness with a frozen renderer as a side effect" rather than
+overclaiming.
+
+### Session 2: Polish and ship (~4 hours)
+
+Kevin arrived with text fields and modifiers already committed.
+The key moments:
+
+**The bbox bug.** Kevin caught a text field positioning error by
+eyeballing the playground side-by-side — a bug Claude had
+introduced by using the full symbol bounding box (including
+echelon dots) instead of the frame bounding box for text
+positioning. Claude's own tests didn't catch it because they
+tested Python against Python. One screenshot from Kevin ("Here's a
+difference now. Who's right?") led to a fix affecting 1,600+
+symbols.
+
+**No xfails.** When two HQ anchor tests failed, Claude marked them
+`xfail`. Kevin: "Wait, we need to fix those failures, not ignore
+them, right?" The fix took five minutes.
+
+**Test accountability.** Kevin: "And more unit tests so I wouldn't
+have had to catch that myself?" This produced 99 additional tests
+covering text+modifier combinations.
+
+**Honest corpus testing.** Kevin: "Are we really guaranteeing that
+we have the right SVG?" This exposed that the corpus test was
+self-referencing — Python output compared against Python output.
+Kevin's question led to generating a JS reference for all 109,216
+symbols, which revealed 1,638 real mismatches. Kevin: "Could we
+hard-code those few cases for now?" — which turned out to be a
+one-line boolean fix, seven stroke-width patches, and a renderer
+tweak for empty control measures.
+
+**Professional polish.** Every CI/CD element, every linting tool,
+every pyproject.toml fix, the upstream version check in the
+playground, the production-readiness section, excluding test
+fixtures from the wheel — all Kevin's prompts, not Claude's
+initiative.
+
+### What Kevin did
+
+Never read a line of source code — not JS, not Python. Directed
+entirely through architecture questions, visual inspection, and
+quality standards. The dominant skill was **architectural
+judgment**: seeing the extraction approach before Claude did,
+sequencing prototype → visual check → testing correctly, and
+knowing when "good enough" wasn't. Every time Claude was ready to
+ship, Kevin found something that wasn't right.
+
+### What Claude did
+
+Volume and comprehension: reading 33K lines of JS, writing the
+extraction tools, renderer, text field logic, modifier port,
+server, tests, CI workflows, playground — all in one afternoon.
+Also the key early insight that extraction beats translation for
+this problem shape.
+
+### Where Claude fell short
+
+Claude would have shipped invisible text in the playground, the
+frame-bbox bug, xfailed HQ anchors, a self-referencing corpus
+test, and 1,638 documented-but-unfixed gaps. Every one was caught
+by Kevin's review. The pattern: Claude optimizes for "does it
+work" and Kevin optimizes for "is it right."
+
+### The recursion
+
+This retrospective was also written by Claude, at Kevin's request,
+about the conversation that produced this project. Kevin asked
+Claude to be honest about the division of labor — including where
+Claude fell short. Claude wrote it; Kevin checked it for accuracy.
+The fact that you're reading a self-assessment written by the tool
+being assessed, reviewed by the human who directed the tool, is
+itself a small example of the dynamic that built the whole project.
+
+The comment that started this said LLMs can't port JS libraries.
+The [commit history](https://github.com/klundeen/milsymbol-py/commits/main)
+is the reply.
