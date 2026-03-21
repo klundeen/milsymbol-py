@@ -24,6 +24,7 @@ _PLACEHOLDER_SVG = (
 
 _number_data: Optional[dict] = None
 _letter_data: Optional[dict] = None
+_modifier_data: Optional[dict] = None
 _geometries: Optional[dict] = None
 
 
@@ -41,6 +42,18 @@ def _load_letter_data() -> dict:
         with gzip.open(_DATA_DIR / "letter-data.json.gz", "rt", encoding="utf-8") as f:
             _letter_data = json.load(f)
     return _letter_data
+
+
+def _load_modifier_data() -> dict:
+    global _modifier_data
+    if _modifier_data is None:
+        p = _DATA_DIR / "modifier-data.json.gz"
+        if p.exists():
+            with gzip.open(p, "rt", encoding="utf-8") as f:
+                _modifier_data = json.load(f)
+        else:
+            _modifier_data = {}
+    return _modifier_data
 
 
 def _load_geometries() -> dict:
@@ -298,15 +311,38 @@ class Symbol:
             self._bbox = entry["bb"]
             self._valid = True
         else:
-            # Try normalizing modifier fields (pos 7=HQ/TF/FD, pos 8-9=echelon/mobility) to zero
-            base_sidc = sidc[:7] + "0" + "00" + sidc[10:]
+            # Zero out positions 17-20 (icon modifiers) for base entity lookup
+            base_sidc = sidc[:16] + "0000"
             if base_sidc in data:
                 entry = data[base_sidc]
                 self._draw_instructions = entry["di"]
                 self._bbox = entry["bb"]
                 self._valid = True
             else:
-                self._valid = False
+                # Also try normalizing HQ/TF/FD (pos 7) and echelon (pos 8-9)
+                base_sidc2 = sidc[:7] + "0" + "00" + sidc[10:16] + "0000"
+                if base_sidc2 in data:
+                    entry = data[base_sidc2]
+                    self._draw_instructions = entry["di"]
+                    self._bbox = entry["bb"]
+                    self._valid = True
+                else:
+                    self._valid = False
+
+        # Resolve icon modifiers (m1/m2 overlays from positions 17-20)
+        self._icon_m1_di: list | None = None
+        self._icon_m2_di: list | None = None
+        m1_code = sidc[16:18]
+        m2_code = sidc[18:20]
+        if self._valid and (m1_code != "00" or m2_code != "00"):
+            mod_data = _load_modifier_data()
+            aff_code = sidc[3]
+            if m1_code != "00":
+                key = f"{ss}_{aff_code}_m1_{m1_code}"
+                self._icon_m1_di = mod_data.get(key)
+            if m2_code != "00":
+                key = f"{ss}_{aff_code}_m2_{m2_code}"
+                self._icon_m2_di = mod_data.get(key)
 
     def _resolve_letter(self):
         data = _load_letter_data()
@@ -389,6 +425,115 @@ class Symbol:
                 return geos[geo_key]["bbox"]
         return self._bbox or {"x1": 50, "y1": 50, "x2": 150, "y2": 150}
 
+    # SS 15 entities excluded from icon scaling (from JS icon.js)
+    _SS15_NO_SCALE = frozenset([
+        130100, 170000, 170400, 170600, 170700, 170800, 170900, 171100,
+        200200, 200300, 200600, 200700, 200800, 200900, 201100, 201301,
+        201302, 201400, 210100, 210200, 210300, 210400, 210500, 230200,
+        250000,
+    ])
+
+    @staticmethod
+    def _set_non_scaling_stroke(draw_items: list, factor: float) -> list:
+        """Deep-copy draw items and set non_scaling_stroke = 1/factor.
+
+        When an icon is scaled down, SVG also scales the stroke width.
+        The JS library compensates by multiplying stroke-width by 1/factor
+        so strokes stay visually consistent.  This walks the draw tree
+        and sets the non_scaling_stroke field that the renderer uses.
+        """
+        import copy
+        items = copy.deepcopy(draw_items)
+        nss = 1.0 / factor if factor != 0 else 1.0
+
+        def _walk(node: object) -> None:
+            if isinstance(node, dict):
+                if "strokewidth" in node:
+                    node["non_scaling_stroke"] = nss
+                for v in node.values():
+                    if isinstance(v, (list, dict)):
+                        _walk(v)
+            elif isinstance(node, list):
+                for item in node:
+                    _walk(item)
+
+        _walk(items)
+        return items
+
+    def _apply_icon_modifiers(self):
+        """Apply icon modifier overlays (m1/m2) with conditional scaling.
+
+        Ports the JS logic from icon.js lines 274-392.  For dismounted
+        individual weapons (SS 27, entity 110301-110403) and land equipment
+        (SS 15, most entities), the base icon is scaled down when modifiers
+        are present to make room for the modifier overlays.
+        """
+        has_m1 = self._icon_m1_di is not None
+        has_m2 = self._icon_m2_di is not None
+        if not has_m1 and not has_m2:
+            return
+
+        ss = self._metadata.get("symbolset", "")
+        entity = self._metadata.get("entity", "000000")
+        main_sidc = int(entity) if entity.isdigit() else 0
+
+        # Determine if this symbol needs scaling
+        needs_scaling = False
+        if ss == "27" and 110301 <= main_sidc <= 110403:
+            needs_scaling = True
+        elif ss == "15" and main_sidc not in self._SS15_NO_SCALE:
+            needs_scaling = True
+
+        if needs_scaling and len(self._final_di) >= 2:
+            icon_di = self._final_di[1]
+
+            # Extract the inner icon paths from the translate(0,0)>scale(1) wrapper
+            # that the JS applies to all scalable symbols at extraction time
+            inner_paths = None
+            if isinstance(icon_di, dict) and icon_di.get("type") == "translate":
+                scale_node = icon_di.get("draw", [None])[0]
+                if isinstance(scale_node, dict) and scale_node.get("type") == "scale":
+                    inner_paths = scale_node.get("draw", [])
+
+            if inner_paths is not None:
+                if has_m1 and has_m2:
+                    factor = 0.45
+                elif has_m2 or has_m1:
+                    factor = 0.7
+                else:
+                    factor = 1
+
+                # ms._scale always wraps: translate(100-f*100, 100-f*100) > scale(f)
+                center_offset = 100 - factor * 100
+                scaled_paths = self._set_non_scaling_stroke(inner_paths, factor)
+                scale_node = {
+                    "type": "translate", "x": center_offset, "y": center_offset,
+                    "draw": [{"type": "scale", "factor": factor, "draw": scaled_paths}],
+                }
+
+                # ms._translate wraps the scale_node in an outer translate for 0.7 cases
+                if has_m2 and not has_m1:
+                    # Only m2: shift icon up
+                    self._final_di[1] = [{
+                        "type": "translate", "x": 0, "y": -10,
+                        "draw": [scale_node],
+                    }]
+                elif has_m1 and not has_m2:
+                    # Only m1: shift icon down
+                    self._final_di[1] = [{
+                        "type": "translate", "x": 0, "y": 10,
+                        "draw": [scale_node],
+                    }]
+                else:
+                    # Both modifiers (0.45) or neither: just the scale node
+                    self._final_di[1] = [scale_node]
+
+        # Append modifier overlay draw instructions
+        if has_m1:
+            self._final_di.append(self._icon_m1_di)
+        if has_m2:
+            self._final_di.append(self._icon_m2_di)
+
     def _compose(self):
         """Compose final draw instructions and bbox, including modifiers and text fields."""
         if self._composed:
@@ -446,8 +591,13 @@ class Symbol:
         }
         mod_draw, mod_bbox = compute_modifiers(self._metadata, self._get_frame_bbox(), mod_style)
 
-        # Merge: base draw instructions + modifiers + text fields
+        # Merge: base draw instructions + icon modifiers + structural modifiers + text fields
         self._final_di = list(self._draw_instructions)
+
+        # Apply icon modifier overlays (m1/m2 from SIDC positions 17-20)
+        if self._number_sidc and hasattr(self, "_icon_m1_di"):
+            self._apply_icon_modifiers()
+
         if mod_draw:
             self._final_di.extend(mod_draw)
         if text_draw:
