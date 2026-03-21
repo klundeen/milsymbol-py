@@ -108,7 +108,7 @@ comes later — and when it does, we already have the full test corpus.
 
 ### A note on process
 
-This project was built in two sessions over a single afternoon (~7
+This project was built in three sessions over two days (~10
 hours) through conversation between Kevin Lundeen (a CS professor
 at Seattle University) and Claude Opus 4.6. Kevin never read the
 milsymbol JS source or the generated Python — he directed entirely
@@ -198,26 +198,34 @@ cd playground && python -m http.server 3000
 |---|---|
 | Number SIDCs (all affiliations) | 37,828 |
 | Letter SIDCs (all affiliations + echelons) | 71,388 |
+| Icon modifier overlays (m1/m2) | 5,936 |
 | Symbol sets | 19 |
-| Tests (fast) | 157 |
+| Tests (fast) | 184 |
 | Tests (full corpus, vs JS reference) | 403 |
 | Corpus match rate | 109,216 / 109,216 (100%) |
-| Python source lines | ~800 |
-| Data (gzipped) | 2 MB |
+| Icon modifier match rate | 7,105 / 7,130 (99.65%) |
+| Python source lines | ~2,100 |
+| Data (gzipped) | 2.1 MB |
 
 ## Can I use this in production?
 
 Yes. The library produces **pixel-identical SVG** to the JS library
-for all 109,216 symbols in the MIL-STD-2525 / STANAG APP-6 set,
-verified by exact string comparison against JS-generated reference
-SVGs. Every affiliation, every symbol set, every echelon.
+for all 109,216 base symbols in the MIL-STD-2525 / STANAG APP-6
+set, verified by exact string comparison against JS-generated
+reference SVGs. Every affiliation, every symbol set, every echelon.
+
+Icon modifier overlays (SIDC positions 17-20) are supported with
+99.65% exact match. The 25 known mismatches are a minor
+stroke-width difference on one specific modifier combination — see
+[Known mismatches](#known-mismatches) below.
 
 **Caveats:**
 
-- Frozen to milsymbol 3.0.3's built-in symbol set — no runtime
+- Frozen to milsymbol 3.0.4's built-in symbol set — no runtime
   extensions or custom icon registration.
-- Text fields and modifiers are computed in Python. The core symbols
-  are extracted from JS; the composition logic around them is ported.
+- Icon modifier overlays, text fields, and structural modifiers
+  are computed in Python. The core symbols are extracted from JS;
+  the composition logic around them is ported.
 - SVG output only (pipe through `cairosvg` for PNG if needed).
 
 **Wheel size:** 1.8 MB, zero runtime dependencies.
@@ -243,6 +251,7 @@ When the upstream JS library updates:
 2. Re-run the extraction tools to regenerate data files:
    ```bash
    node tools/extract_data.mjs ./milsymbol ./milsymbol-py/milsymbol/data
+   node tools/extract_modifiers.mjs ./milsymbol ./milsymbol-py/milsymbol/data
    ```
 3. Re-generate the corpus reference from JS:
    ```bash
@@ -264,7 +273,7 @@ git clone https://github.com/klundeen/milsymbol-py.git
 cd milsymbol-py
 pip install -e ".[dev]"
 
-pytest                                              # 157 fast tests
+pytest                                              # 184 fast tests
 pytest -m slow                                      # + 403 corpus tests
 ruff check milsymbol/ tests/ server.py              # lint
 ruff format --check milsymbol/ tests/ server.py     # format check
@@ -297,6 +306,53 @@ faithfully by the Python port:
   including echelon dots. At larger sizes, quantity text can overlap
   the echelon modifier.
 
+## Known mismatches
+
+25 symbols produce SVGs that differ slightly from the JS reference.
+All involve SS 15 (Land Equipment) entity 120100 (Armoured
+Protected Vehicle) with m2 modifier code 07 (Wheeled Limited Cross
+Country), across all 25 valid m1 codes (00–24).
+
+The difference is `stroke-width` on the small wheel circles at the
+bottom of the symbol. The JS library's `ms._scale` function
+mutates `non_scaling_stroke` in place on shared icon-part cache
+objects, which bleeds into the m2=07 overlay circles because entity
+120100's main icon embeds a reference to the same wheel-circle
+objects. This cache mutation is order-dependent and difficult to
+reproduce without porting the full JS runtime cache semantics.
+
+To see the difference, enter `10031500001201000107` in the
+playground and compare the two small circles at the bottom — the
+JS version renders them with slightly thicker strokes.
+
+| Scenario | JS stroke-width | Python stroke-width |
+|---|---|---|
+| m1=00, m2=07 (scale 0.7) | 4.286 | 3 |
+| m1=01–24, m2=07 (scale 0.45) | 6.667 | 3 |
+
+The same pattern likely affects 8 other SS 15 entities that embed
+the same wheel-circle icon parts (120000, 130000, 190000–190500),
+though only entity 120100 was tested in the broad sweep.
+
+## Changes in v0.2.0
+
+**Bug fix: icon modifier codes (SIDC positions 17-20).** The
+20-digit number SIDC encodes two independent icon modifier codes
+at positions 17-18 (sector 1) and 19-20 (sector 2). These add
+weapon types, equipment indicators, rank insignia, and capability
+overlays to the base entity icon. In v0.1.0, any SIDC with
+non-zero modifier codes returned a question mark — which meant
+most real-world tactical symbols with weapons or equipment
+designators didn't render. v0.2.0 extracts the modifier overlay
+draw instructions separately (5,936 entries, 55 KB) and composes
+them at runtime with the correct scaling transforms, matching the
+JS output for 99.65% of tested combinations.
+
+**Bug fix: SIDC status field fallback.** SIDCs with non-zero
+status codes (position 6) now correctly fall back to the base
+entity lookup. Previously, a damaged or destroyed symbol
+(status=1 or 2) with modifier codes could fail to resolve.
+
 ## Roadmap
 
 - [x] Extract test oracle (109K reference symbols)
@@ -305,6 +361,7 @@ faithfully by the Python port:
 - [x] Port text field placement (quantity, type, designation, etc.)
 - [x] Port echelon / mobility / HQ / TF / feint-dummy modifiers
 - [x] Comprehensive test fixture (109K symbols vs JS reference)
+- [x] Port icon modifier overlays (m1/m2, SIDC positions 17-20)
 - [ ] Port composition logic (Phase 2 — real port)
 - [ ] Automated upstream sync (CI job to detect new milsymbol releases)
 - [ ] Extension API
@@ -434,6 +491,48 @@ frame-bbox bug, xfailed HQ anchors, a self-referencing corpus
 test, and 1,638 documented-but-unfixed gaps. Every one was caught
 by Kevin's review. The pattern: Claude optimizes for "does it
 work" and Kevin optimizes for "is it right."
+
+### Session 3: And you still need a domain expert (~3 hours)
+
+A week after publishing v0.1.0, Kevin was reading the milsymbol
+JS source for an unrelated reason and noticed something alarming:
+a block of code that conditionally scaled weapon icons for
+dismounted individuals based on whether modifier codes were
+present. The modifier codes occupy SIDC positions 17-20 — and the
+extraction tool had hard-coded those positions to `"0000"`.
+
+This meant every symbol with actual modifier codes — weapon types,
+equipment designators, rank insignia, the things that make a
+tactical symbol useful — returned a question mark. The 109,216
+corpus match was real, but it was testing the 37,828 base entities
+with their modifiers zeroed out. A soldier carrying a rifle
+rendered fine; a soldier carrying a rifle *with a sniper
+designation and an E-3 rank badge* got a question mark.
+
+Claude hadn't noticed the gap because it optimized for the metric
+(100% corpus match) rather than the use case (real SIDCs with
+modifier codes). Kevin noticed because he was reading the source
+with domain context — he knew what the modifier positions meant
+and recognized that the extraction was skipping them.
+
+The fix required porting actual composition logic from the JS
+library: a separate modifier data extraction, a three-way scaling
+transform (both modifiers, m1 only, m2 only), stroke-width
+compensation, and a fallback chain for the SIDC status field that
+had also been silently broken. Along the way, they discovered that
+the JS library has a cache mutation side effect where `ms._scale`
+modifies shared icon-part objects in place — an upstream
+peculiarity that makes exact SVG matching for 25 specific symbols
+impractical without porting the full JS runtime cache.
+
+The session reinforced the pattern from before: Claude does the
+volume work, Kevin catches the structural problems. But this time
+the structural problem wasn't in Claude's code — it was in the
+extraction strategy Claude designed in Session 1. The "run every
+valid input" approach was sound, but "every valid input" turned
+out to be a smaller set than "every input a real user would
+provide." You need someone who knows what a real user would
+provide.
 
 ### The recursion
 
