@@ -437,6 +437,7 @@
           <div class="pnl-hd">
             <span class="tag t-js">JS</span>
             <h2>milsymbol</h2>
+            <span id="version-badge" style="font:11px/1 'DM Mono',monospace;color:#6b7a5a;margin-left:8px">v3.0.4</span>
             <div class="sz-toggle">
               <button onclick="setSize('n')" class="on" id="sz-n">1×</button>
               <button onclick="setSize('lg')" id="sz-lg">2×</button>
@@ -706,6 +707,28 @@ function setSize(s) {
 
 initQP();
 render();
+
+// Check for newer upstream milsymbol releases
+(async () => {
+  const PINNED = '3.0.4';
+  try {
+    const r = await fetch(
+      'https://api.github.com/repos/spatialillusions/milsymbol/releases/latest',
+      {signal: AbortSignal.timeout(3000)}
+    );
+    if (!r.ok) return;
+    const d = await r.json();
+    const latest = (d.tag_name || '').replace(/^v/, '');
+    if (latest && latest !== PINNED) {
+      const badge = document.getElementById('version-badge');
+      if (badge) {
+        badge.innerHTML = `v${PINNED} · <a href="${d.html_url}" target="_blank" `
+          + `style="color:#a67c00;text-decoration:none" `
+          + `title="Upstream has a newer release">⚠ v${latest} available</a>`;
+      }
+    }
+  } catch(e) { /* offline or rate-limited — ignore */ }
+})();
 </script>
 </body>
 </html>

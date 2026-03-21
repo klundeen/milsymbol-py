@@ -61,6 +61,11 @@ addopts = "-m 'not slow'"
 [tool.mypy]
 ignore_missing_imports = true
 
+[tool.milsymbol]
+upstream-version = "3.0.4"
+upstream-commit = "b05f2d7"
+upstream-repo = "https://github.com/spatialillusions/milsymbol"
+
 [tool.ruff]
 target-version = "py310"
 line-length = 100

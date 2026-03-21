@@ -107,7 +107,7 @@ comes later — and when it does, we already have the full test corpus.
 
 ### A note on process
 
-This project was built entirely through 3-hour conversation between Kevin
+This project was built entirely through 5-hour conversation between Kevin
 Lundeen (a computer science professor at Seattle University) and
 Claude Opus 4.6. Kevin directed the architecture, asked the right
 questions, and pressure-tested the approach — but never read the
@@ -219,15 +219,40 @@ SVGs. Every affiliation, every symbol set, every echelon.
 
 **Wheel size:** 1.8 MB, zero runtime dependencies.
 
-## Regenerating data
+## Upstream version
 
-If the upstream JS library updates:
+Pinned to **milsymbol 3.0.4**
+([`b05f2d7`](https://github.com/spatialillusions/milsymbol/commit/b05f2d7)).
+The playground checks for newer releases on load via the GitHub API
+and displays a warning if the upstream has moved ahead.
 
-```bash
-git clone https://github.com/spatialillusions/milsymbol.git
-cd milsymbol && npm install && npm run build && cd ..
-node tools/extract_data.mjs ./milsymbol ./milsymbol-py/milsymbol/data
-```
+The version pin is recorded in `pyproject.toml` under `[tool.milsymbol]`.
+
+### Staying in sync
+
+When the upstream JS library updates:
+
+1. Clone the new version and build it:
+   ```bash
+   git clone https://github.com/spatialillusions/milsymbol.git
+   cd milsymbol && npm install && npm run build
+   ```
+2. Re-run the extraction tools to regenerate data files:
+   ```bash
+   node tools/extract_data.mjs ./milsymbol ./milsymbol-py/milsymbol/data
+   ```
+3. Re-generate the corpus reference from JS:
+   ```bash
+   node tools/gen_corpus_ref.mjs ./milsymbol ./milsymbol-py/milsymbol/data
+   ```
+4. Run the corpus test to see what changed:
+   ```bash
+   pytest tests/test_corpus.py -m slow -v
+   ```
+5. Update `playground/milsymbol.js` with the new build.
+
+A future CI job could automate steps 1–4 on a schedule, opening a
+PR when the upstream version changes.
 
 ## Development
 
@@ -236,7 +261,8 @@ git clone https://github.com/klundeen/milsymbol-py.git
 cd milsymbol-py
 pip install -e ".[dev]"
 
-pytest                                              # 143 tests
+pytest                                              # 157 fast tests
+pytest -m slow                                      # + 403 corpus tests
 ruff check milsymbol/ tests/ server.py              # lint
 ruff format --check milsymbol/ tests/ server.py     # format check
 mypy milsymbol/ server.py --ignore-missing-imports  # type check
@@ -280,6 +306,7 @@ faithfully by the Python port:
 - [x] Port echelon / mobility / HQ / TF / feint-dummy modifiers
 - [x] Comprehensive test fixture (109K symbols vs JS reference)
 - [ ] Port composition logic (Phase 2 — real port)
+- [ ] Automated upstream sync (CI job to detect new milsymbol releases)
 - [ ] Extension API
 - [ ] PNG rasterization (via cairosvg or similar)
 
