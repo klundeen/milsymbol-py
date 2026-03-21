@@ -426,12 +426,35 @@ class Symbol:
         return self._bbox or {"x1": 50, "y1": 50, "x2": 150, "y2": 150}
 
     # SS 15 entities excluded from icon scaling (from JS icon.js)
-    _SS15_NO_SCALE = frozenset([
-        130100, 170000, 170400, 170600, 170700, 170800, 170900, 171100,
-        200200, 200300, 200600, 200700, 200800, 200900, 201100, 201301,
-        201302, 201400, 210100, 210200, 210300, 210400, 210500, 230200,
-        250000,
-    ])
+    _SS15_NO_SCALE = frozenset(
+        [
+            130100,
+            170000,
+            170400,
+            170600,
+            170700,
+            170800,
+            170900,
+            171100,
+            200200,
+            200300,
+            200600,
+            200700,
+            200800,
+            200900,
+            201100,
+            201301,
+            201302,
+            201400,
+            210100,
+            210200,
+            210300,
+            210400,
+            210500,
+            230200,
+            250000,
+        ]
+    )
 
     @staticmethod
     def _set_non_scaling_stroke(draw_items: list, factor: float) -> list:
@@ -443,6 +466,7 @@ class Symbol:
         and sets the non_scaling_stroke field that the renderer uses.
         """
         import copy
+
         items = copy.deepcopy(draw_items)
         nss = 1.0 / factor if factor != 0 else 1.0
 
@@ -507,23 +531,33 @@ class Symbol:
                 center_offset = 100 - factor * 100
                 scaled_paths = self._set_non_scaling_stroke(inner_paths, factor)
                 scale_node = {
-                    "type": "translate", "x": center_offset, "y": center_offset,
+                    "type": "translate",
+                    "x": center_offset,
+                    "y": center_offset,
                     "draw": [{"type": "scale", "factor": factor, "draw": scaled_paths}],
                 }
 
                 # ms._translate wraps the scale_node in an outer translate for 0.7 cases
                 if has_m2 and not has_m1:
                     # Only m2: shift icon up
-                    self._final_di[1] = [{
-                        "type": "translate", "x": 0, "y": -10,
-                        "draw": [scale_node],
-                    }]
+                    self._final_di[1] = [
+                        {
+                            "type": "translate",
+                            "x": 0,
+                            "y": -10,
+                            "draw": [scale_node],
+                        }
+                    ]
                 elif has_m1 and not has_m2:
                     # Only m1: shift icon down
-                    self._final_di[1] = [{
-                        "type": "translate", "x": 0, "y": 10,
-                        "draw": [scale_node],
-                    }]
+                    self._final_di[1] = [
+                        {
+                            "type": "translate",
+                            "x": 0,
+                            "y": 10,
+                            "draw": [scale_node],
+                        }
+                    ]
                 else:
                     # Both modifiers (0.45) or neither: just the scale node
                     self._final_di[1] = [scale_node]
