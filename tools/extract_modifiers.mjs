@@ -107,18 +107,18 @@ for (const ss of symbolSets) {
 
     const ssAffKey = ss + "_" + aff;
 
-    // Store m1 entries
+    // Store m1 entries (include empty arrays — they're valid codes that render nothing)
     for (const [code, drawInstr] of Object.entries(m1Dict)) {
-      if (drawInstr && (Array.isArray(drawInstr) ? drawInstr.length > 0 : true)) {
+      if (drawInstr !== undefined && drawInstr !== null) {
         const key = ssAffKey + "_m1_" + code;
         modData[key] = drawInstr;
         totalEntries++;
       }
     }
 
-    // Store m2 entries
+    // Store m2 entries (include empty arrays — they're valid codes that render nothing)
     for (const [code, drawInstr] of Object.entries(m2Dict)) {
-      if (drawInstr && (Array.isArray(drawInstr) ? drawInstr.length > 0 : true)) {
+      if (drawInstr !== undefined && drawInstr !== null) {
         const key = ssAffKey + "_m2_" + code;
         modData[key] = drawInstr;
         totalEntries++;
