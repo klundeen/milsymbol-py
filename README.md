@@ -1,6 +1,7 @@
 # milsymbol-py
 
 [![Tests](https://github.com/klundeen/milsymbol-py/actions/workflows/tests.yml/badge.svg)](https://github.com/klundeen/milsymbol-py/actions/workflows/tests.yml)
+[![PyPI](https://img.shields.io/pypi/v/milsymbol)](https://pypi.org/project/milsymbol/)
 
 A reference implementation and test harness for porting
 [milsymbol](https://github.com/spatialillusions/milsymbol) (JavaScript)
@@ -282,12 +283,9 @@ trusted publishing.
 
 ### Publishing to PyPI
 
-> **TODO (Kevin):** Configure trusted publishing on pypi.org:
-> Project → Settings → Publishing → add GitHub publisher with
-> `klundeen/milsymbol-py` and workflow `publish.yml`.
-
-Then: create a GitHub Release tagged `v0.1.0` and the package
-publishes automatically.
+Published at [pypi.org/project/milsymbol](https://pypi.org/project/milsymbol/).
+Creating a GitHub Release triggers automatic publishing via trusted
+publishing.
 
 ## Known upstream quirks
 
