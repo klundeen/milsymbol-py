@@ -311,7 +311,7 @@ class Symbol:
             self._bbox = entry["bb"]
             self._valid = True
         else:
-            # Zero out positions 17-20 (icon modifiers) for base entity lookup
+            # Zero out positions 16-19 (icon modifiers) for base entity lookup
             base_sidc = sidc[:16] + "0000"
             if base_sidc in data:
                 entry = data[base_sidc]
@@ -319,8 +319,9 @@ class Symbol:
                 self._bbox = entry["bb"]
                 self._valid = True
             else:
-                # Also try normalizing HQ/TF/FD (pos 7) and echelon (pos 8-9)
-                base_sidc2 = sidc[:7] + "0" + "00" + sidc[10:16] + "0000"
+                # Also zero status (pos 6), HQ/TF/FD (pos 7), echelon (pos 8-9).
+                # Extraction always uses "0000" at positions 6-9.
+                base_sidc2 = sidc[:6] + "0000" + sidc[10:16] + "0000"
                 if base_sidc2 in data:
                     entry = data[base_sidc2]
                     self._draw_instructions = entry["di"]
